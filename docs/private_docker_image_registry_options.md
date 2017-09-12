@@ -1,6 +1,6 @@
 # Private Docker Image Registry Solutions
 
-There are two actively developed and fully featured private Docker Registry management tools available- Helm and Harbor. They 
+There are two actively developed and fully featured private Docker Registry management tools available- Portus and Harbor. They 
 both provide web based UI's, and have fully containerized solutions. Each have a number of strengths and weaknesses. 
 
 ---
