@@ -67,4 +67,4 @@ No, the API does not support any form of authentication or authorization.
 
 ### Is there some way of ensuring that there is not MITM and downloaded charts are secure? (eg. SSL / signatures, etc.)
 
-Not really. ChartMuseum supports chart [provinance files](https://github.com/kubernetes/helm/blob/master/docs/provenance.md) which provide the ability to authenicate a chart assuming that the end user trusts the author but without a secure connection (SSL is not supported) a MITM attack could theoretically manipulate the provenance file itself, rendering it insecure.
+Not really. ChartMuseum supports chart [provenance files](https://github.com/kubernetes/helm/blob/master/docs/provenance.md) which provide the ability to authenicate a chart assuming that the end user trusts the author but without a secure connection (SSL is not supported) a MITM attack could theoretically manipulate the provenance file itself, rendering it insecure.
