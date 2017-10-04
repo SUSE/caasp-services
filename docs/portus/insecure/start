@@ -1,0 +1,23 @@
+#! /bin/bash
+kubectl apply -f db/db.cm.yml
+kubectl apply -f db/db.deploy.yml
+kubectl apply -f db/db.svc.yml
+echo "Database added"
+
+kubectl apply -f portus/portus.cm.yml
+kubectl apply -f portus/portus.deploy.yml
+kubectl apply -f portus/portus.svc.yml
+echo "Web UI added"
+
+kubectl apply -f portus/crono.deploy.yml
+echo "Background processing added"
+
+kubectl apply -f registry/registry.cm.yml
+kubectl apply -f registry/registry.deploy.yml
+kubectl apply -f registry/registry.svc.yml
+echo "Docker registry added"
+
+kubectl apply -f nginx/nginx.cm.yml
+kubectl apply -f nginx/nginx.deploy.yml
+kubectl apply -f nginx/nginx.svc.yml
+echo "Nginx server added"

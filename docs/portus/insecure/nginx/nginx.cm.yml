@@ -1,0 +1,405 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portus-nginx-config
+data:
+  key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    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
+    -----END RSA PRIVATE KEY-----
+  
+  cert: |
+    -----BEGIN CERTIFICATE-----
+    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
+    Lkv08Nr4IQiVsRDqjt7m
+    -----END CERTIFICATE-----
+  
+  conf: |
+    # This file is largely based on the one written by @Djelibeybi in:
+    #      https://github.com/Djelibeybi/Portus-On-OracleLinux7/
+    
+    events {
+      worker_connections 1024;
+    }
+    
+    http {
+      # include       mime.types;
+      default_type  application/octet-stream;
+      charset       UTF-8;
+    
+      # Some basic config.
+      server_tokens off;
+      sendfile      on;
+      tcp_nopush    on;
+      tcp_nodelay   on;
+    
+      # On timeouts.
+      keepalive_timeout     65;
+      client_header_timeout 240;
+      client_body_timeout   240;
+      fastcgi_read_timeout  249;
+      reset_timedout_connection on;
+    
+      ## Set a variable to help us decide if we need to add the
+      ## 'Docker-Distribution-Api-Version' header.
+      ## The registry always sets this header.
+      ## In the case of nginx performing auth, the header will be unset
+      ## since nginx is auth-ing before proxying.
+      map $upstream_http_docker_distribution_api_version $docker_distribution_api_version {
+        '' 'registry/2.0';
+      }
+    
+      upstream portus {
+        least_conn;
+        server portus:3000 max_fails=3 fail_timeout=15s;
+      }
+    
+      upstream registry {
+        least_conn;
+        server registry:5000 max_fails=3 fail_timeout=15s;
+      }
+    
+      server {
+        listen 80;
+        server_name nginx; 
+    
+        ##
+        # SSL
+    
+        ssl off;
+    
+        # Certificates
+        # ssl_certificate /secrets/portus.crt;
+        # ssl_certificate_key /secrets/portus.key;
+    
+        # Enable session resumption to improve https performance
+        #
+        # http://vincent.bernat.im/en/blog/2011-ssl-session-reuse-rfc5077.html
+        # ssl_session_cache shared:SSL:10m;
+        # ssl_session_timeout 10m;
+    
+        # Enables server-side protection from BEAST attacks
+        # http://blog.ivanristic.com/2013/09/is-beast-still-a-threat.html
+        # ssl_prefer_server_ciphers on;
+    
+        # Disable SSLv3 (enabled by default since nginx 0.8.19)
+        # since it's less secure than TLS
+        # http://en.wikipedia.org/wiki/Secure_Sockets_Layer#SSL_3.0
+        # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    
+        # Ciphers chosen for forward secrecy and compatibility.
+        #
+        # http://blog.ivanristic.com/2013/08/configuring-apache-nginx-and-openssl-for-forward-secrecy.html
+        # ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+    
+        ##
+        # Docker-specific stuff.
+    
+        proxy_set_header Host $http_host;   # required for Docker client sake
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Scheme $scheme;
+    
+        # disable any limits to avoid HTTP 413 for large image uploads
+        client_max_body_size 0;
+    
+        # required to avoid HTTP 411: see Issue #1486
+        # (https://github.com/docker/docker/issues/1486)
+        chunked_transfer_encoding on;
+    
+        ##
+        # Custom headers.
+    
+        # Adding HSTS[1] (HTTP Strict Transport Security) to avoid SSL stripping[2].
+        #
+        # [1] https://developer.mozilla.org/en-US/docs/Security/HTTP_Strict_Transport_Security
+        # [2] https://en.wikipedia.org/wiki/SSL_stripping#SSL_stripping
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+    
+        # Don't allow the browser to render the page inside a frame or iframe
+        # and avoid Clickjacking. More in the following link:
+        #
+        # https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
+        add_header X-Frame-Options DENY;
+    
+        # Disable content-type sniffing on some browsers.
+        add_header X-Content-Type-Options nosniff;
+    
+        # This header enables the Cross-site scripting (XSS) filter built into
+        # most recent web browsers. It's usually enabled by default anyway, so the
+        # role of this header is to re-enable the filter for this particular
+        # website if it was disabled by the user.
+        add_header X-XSS-Protection "1; mode=block";
+    
+        # Redirect (most) requests to /v2/* to the Docker Registry
+        location /v2/ {
+          # Do not allow connections from docker 1.5 and earlier
+          # docker pre-1.6.0 did not properly set the user agent on ping, catch "Go *" user agents
+          if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+            return 404;
+          }
+    
+          ## If $docker_distribution_api_version is empty, the header will not be added.
+          ## See the map directive above where this variable is defined.
+          add_header 'Docker-Distribution-Api-Version' $docker_distribution_api_version always;
+    
+          proxy_pass http://registry;
+          proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_read_timeout 900;
+          proxy_buffering on;
+        }
+    
+        # Portus needs to handle /v2/token for authentication
+        location = /v2/token {
+          proxy_pass http://portus;
+          proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_read_timeout 900;
+          proxy_buffering on;
+        }
+    
+        # Portus needs to handle /v2/webhooks/events for notifications
+        location = /v2/webhooks/events {
+          proxy_pass http://portus;
+          proxy_set_header Host $http_host;   # required for docker client's sake
+          proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_read_timeout 900;
+          proxy_buffering on;
+        }
+    
+        # # Assets are mapped inside of /srv/Portus/public from a shared volume.
+        # location ~ ^/(assets)/ {
+        #   access_log  off;
+        #   gzip_static on;
+        #   expires     max;
+        #   add_header  Cache-Control public;
+        #   add_header  Last-Modified "";
+        #   add_header  ETag "";
+        #   break;
+        #  }
+    
+        # Portus handles everything else for the UI
+        location / {
+          try_files $uri/index.html $uri.html $uri @portus;
+        }
+    
+        location @portus {
+          proxy_pass http://portus;
+          proxy_set_header Host $http_host;   # required for docker client's sake
+          proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_read_timeout 900;
+          proxy_buffering on;
+        }
+      }
+    }
+
+  mime: |
+    types {
+      # Data interchange
+      application/atom+xml                  atom;
+      application/json                      json map topojson;
+      application/ld+json                   jsonld;
+      application/rss+xml                   rss;
+      application/vnd.geo+json              geojson;
+      application/xml                       rdf xml;
+    
+      # JavaScript
+      # Normalize to standard type.
+      # https://tools.ietf.org/html/rfc4329#section-7.2
+      application/javascript                js;
+    
+      # Manifest files
+      application/manifest+json             webmanifest;
+      application/x-web-app-manifest+json   webapp;
+      text/cache-manifest                   appcache;
+    
+      # Media files
+      audio/midi                            mid midi kar;
+      audio/mp4                             aac f4a f4b m4a;
+      audio/mpeg                            mp3;
+      audio/ogg                             oga ogg opus;
+      audio/x-realaudio                     ra;
+      audio/x-wav                           wav;
+      image/bmp                             bmp;
+      image/gif                             gif;
+      image/jpeg                            jpeg jpg;
+      image/jxr                             jxr hdp wdp;
+      image/png                             png;
+      image/svg+xml                         svg svgz;
+      image/tiff                            tif tiff;
+      image/vnd.wap.wbmp                    wbmp;
+      image/webp                            webp;
+      image/x-jng                           jng;
+      video/3gpp                            3gp 3gpp;
+      video/mp4                             f4p f4v m4v mp4;
+      video/mpeg                            mpeg mpg;
+      video/ogg                             ogv;
+      video/quicktime                       mov;
+      video/webm                            webm;
+      video/x-flv                           flv;
+      video/x-mng                           mng;
+      video/x-ms-asf                        asf asx;
+      video/x-ms-wmv                        wmv;
+      video/x-msvideo                       avi;
+    
+      # Serving `.ico` image files with a different media type
+      # prevents Internet Explorer from displaying then as images:
+      # https://github.com/h5bp/html5-boilerplate/commit/37b5fec090d00f38de64b591bcddcb205aadf8ee
+    
+      image/x-icon                          cur ico;
+    
+      # Microsoft Office
+      application/msword                                                         doc;
+      application/vnd.ms-excel                                                   xls;
+      application/vnd.ms-powerpoint                                              ppt;
+      application/vnd.openxmlformats-officedocument.wordprocessingml.document    docx;
+      application/vnd.openxmlformats-officedocument.spreadsheetml.sheet          xlsx;
+      application/vnd.openxmlformats-officedocument.presentationml.presentation  pptx;
+    
+      # Web fonts
+      application/font-woff                 woff;
+      application/font-woff2                woff2;
+      application/vnd.ms-fontobject         eot;
+    
+      # Browsers usually ignore the font media types and simply sniff
+      # the bytes to figure out the font type.
+      # https://mimesniff.spec.whatwg.org/#matching-a-font-type-pattern
+      #
+      # However, Blink and WebKit based browsers will show a warning
+      # in the console if the following font types are served with any
+      # other media types.
+    
+      application/x-font-ttf                ttc ttf;
+      font/opentype                         otf;
+    
+      # Other
+      application/java-archive              ear jar war;
+      application/mac-binhex40              hqx;
+      application/octet-stream              bin deb dll dmg exe img iso msi msm msp safariextz;
+      application/pdf                       pdf;
+      application/postscript                ai eps ps;
+      application/rtf                       rtf;
+      application/vnd.google-earth.kml+xml  kml;
+      application/vnd.google-earth.kmz      kmz;
+      application/vnd.wap.wmlc              wmlc;
+      application/x-7z-compressed           7z;
+      application/x-bb-appworld             bbaw;
+      application/x-bittorrent              torrent;
+      application/x-chrome-extension        crx;
+      application/x-cocoa                   cco;
+      application/x-java-archive-diff       jardiff;
+      application/x-java-jnlp-file          jnlp;
+      application/x-makeself                run;
+      application/x-opera-extension         oex;
+      application/x-perl                    pl pm;
+      application/x-pilot                   pdb prc;
+      application/x-rar-compressed          rar;
+      application/x-redhat-package-manager  rpm;
+      application/x-sea                     sea;
+      application/x-shockwave-flash         swf;
+      application/x-stuffit                 sit;
+      application/x-tcl                     tcl tk;
+      application/x-x509-ca-cert            crt der pem;
+      application/x-xpinstall               xpi;
+      application/xhtml+xml                 xhtml;
+      application/xslt+xml                  xsl;
+      application/zip                       zip;
+      text/css                              css;
+      text/csv                              csv;
+      text/html                             htm html shtml;
+      text/markdown                         md;
+      text/mathml                           mml;
+      text/plain                            txt;
+      text/vcard                            vcard vcf;
+      text/vnd.rim.location.xloc            xloc;
+      text/vnd.sun.j2me.app-descriptor      jad;
+      text/vnd.wap.wml                      wml;
+      text/vtt                              vtt;
+      text/x-component                      htc;
+    }

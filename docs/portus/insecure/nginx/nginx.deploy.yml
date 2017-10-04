@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-nginx-deployment
+  labels:
+    name: portus-nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: portus-nginx-apps
+  template:
+    metadata:
+      labels:
+        name: portus-nginx-apps
+    spec:
+      containers:
+      - name: portus-nginx-apps
+        image: library/nginx:alpine 
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: conf
+          mountPath: /etc/nginx
+        ports:
+          - containerPort: 80 
+          - containerPort: 443 
+      volumes:
+        - name: conf
+          configMap:
+            name: portus-nginx-config
+            items:
+            - key: conf
+              path: nginx.conf

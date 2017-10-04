@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portus-db-config
+data:
+  MYSQL_DATABASE: portus 
+  MYSQL_ROOT_PASSWORD: password

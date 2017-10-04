@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-db-deployment
+  labels:
+    name: portus-db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: portus-db-apps
+  template:
+    metadata:
+      labels:
+        name: portus-db-apps
+    spec:
+      containers:
+      - name: portus-db-app
+        image: library/mariadb:10.0.23
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+               name: portus-db-config
+               key: MYSQL_DATABASE
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+               name: portus-db-config
+               key: MYSQL_ROOT_PASSWORD

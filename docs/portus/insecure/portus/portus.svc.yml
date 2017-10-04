@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: portus
+spec:
+  ports:
+    - name: repo
+      port: 3000
+  selector:
+    name: portus-apps
