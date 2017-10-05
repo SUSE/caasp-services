@@ -1,0 +1,166 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: harbor-adminserver-deployment
+  labels:
+    name: harbor-adminserver-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: harbor-adminserver-apps
+  template:
+    metadata:
+      labels:
+        name: harbor-adminserver-apps
+    spec:
+      containers:
+      - name: harbor-adminserver-app
+        image: vmware/harbor-adminserver:v1.2.0 
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: EXT_ENDPOINT 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: EXT_ENDPOINT      
+          - name: AUTH_MODE 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: AUTH_MODE      
+          - name: SELF_REGISTRATION 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: SELF_REGISTRATION      
+          - name: DATABASE_TYPE 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: DATABASE_TYPE      
+          - name: MYSQL_HOST 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: MYSQL_HOST      
+          - name: MYSQL_PORT 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: MYSQL_PORT      
+          - name: MYSQL_USR 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: MYSQL_USR      
+          - name: MYSQL_PWD 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: MYSQL_PWD      
+          - name: MYSQL_DATABASE 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: MYSQL_DATABASE      
+          - name: REGISTRY_URL 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: REGISTRY_URL      
+          - name: TOKEN_SERVICE_URL 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: TOKEN_SERVICE_URL      
+          - name: HARBOR_ADMIN_PASSWORD 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: HARBOR_ADMIN_PASSWORD      
+          - name: PROJECT_CREATION_RESTRICTION 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: PROJECT_CREATION_RESTRICTION      
+          - name: VERIFY_REMOTE_CERT 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: VERIFY_REMOTE_CERT      
+          - name: MAX_JOB_WORKERS 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: MAX_JOB_WORKERS      
+          - name: UI_SECRET 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: UI_SECRET      
+          - name: JOBSERVICE_SECRET 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: JOBSERVICE_SECRET      
+          - name: TOKEN_EXPIRATION 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: TOKEN_EXPIRATION      
+          - name: CFG_EXPIRATION 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: CFG_EXPIRATION      
+          - name: GODEBUG 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: GODEBUG      
+          - name: WITH_NOTARY 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: WITH_NOTARY      
+          - name: WITH_CLAIR 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: WITH_CLAIR      
+          - name: CLAIR_DB_PASSWORD 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: CLAIR_DB_PASSWORD      
+          - name: RESET 
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-adminserver-config
+               key: RESET  
+          - name: KEY_PATH
+            valueFrom:
+              configMapKeyRef:
+               name: harbor-adminserver-config
+               key: KEY_PATH
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secret
+          mountPath: /secret 
+        - name: config 
+          mountPath: /etc/adminserver/config
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: secret 
+        configMap:
+          name: harbor-adminserver-config
+          items:
+          - key: key
+            path: key
+      - name: config
+        emptyDir: {}
+      - name: data
+        emptyDir: {}

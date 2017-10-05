@@ -1,0 +1,30 @@
+#! /bin/bash
+kubectl delete cm harbor-mysql-config 
+kubectl delete deploy harbor-mysql-deployment 
+kubectl delete svc mysql 
+echo "Mysql removed"
+
+kubectl delete cm harbor-adminserver-config 
+kubectl delete deploy harbor-adminserver-deployment 
+kubectl delete svc adminserver 
+echo "Web backend removed"
+
+kubectl delete cm harbor-jobservice-config 
+kubectl delete deploy harbor-jobservice-deployment 
+kubectl delete svc jobservice 
+echo "Background processing removed"
+
+kubectl delete cm harbor-ui-config
+kubectl delete deploy harbor-ui-deployment 
+kubectl delete svc ui 
+echo "Web UI removed"
+
+kubectl delete cm harbor-registry-config
+kubectl delete deploy harbor-registry-deployment 
+kubectl delete svc registry 
+echo "Docker registry removed"
+
+kubectl delete cm harbor-nginx-config
+kubectl delete deploy harbor-nginx-deployment 
+kubectl delete svc nginx 
+echo "Nginx server removed"

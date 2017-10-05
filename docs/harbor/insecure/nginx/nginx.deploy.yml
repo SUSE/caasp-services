@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: harbor-nginx-deployment
+  labels:
+    name: harbor-nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: harbor-nginx-apps
+  template:
+    metadata:
+      labels:
+        name: harbor-nginx-apps
+    spec:
+      containers:
+      - name: harbor-nginx-apps
+        image: vmware/nginx:1.11.5-patched 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx
+      volumes:
+      - name: config
+        configMap:
+          name: harbor-nginx-config
+          items:
+          - key: conf
+            path: nginx.conf
