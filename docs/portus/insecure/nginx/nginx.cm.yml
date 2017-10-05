@@ -44,11 +44,11 @@ data:
     
       upstream registry {
         least_conn;
-        server registry:5000 max_fails=3 fail_timeout=15s;
+        server registry:30521 max_fails=3 fail_timeout=15s;
       }
     
       server {
-        listen 80;
+        listen 32123;
         server_name nginx; 
     
         ##

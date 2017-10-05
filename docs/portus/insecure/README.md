@@ -19,25 +19,9 @@ persistent storage.
 working with full SSL support by self signing certificates across the containers, and forcing the containers 
 to trust the certs. So adding support for HTTPS to this configuration is possible, but will require some 
 additional work to implement it in a clean way.
-* Docker CLI support from outside the cluster. This implementation creates a working registry, but does not 
-support docker login, or pushing and pulling from outside the cluster. There are two reasons why access from 
-outside the cluster is currently not working:
-    * When attempting to login to the Docker registry the request is initially redirected to an endpoint that 
-    authenticates the User, and returns a token. This endpoint is internal to the Kubernetes cluster, and resolves 
-    when containers within the deployment use it. However if the registry pods 5000 port is exposed outside of the 
-    cluster, and an outside Docker client tries to login to the registry, the registry sends the client back the 
-    internal token authentication url, which is not resolvable outside the cluster, so the client is unable to 
-    receive a token.
-    * Internally the Docker registry is given the domain name `registry`, and listens on port `5000`. The Portus 
-    app also saves a reference to the registry connection point when being set up, and only allows images to be 
-    pushed to the exact endpoint that is saved when setting up the app. So even if the registry pod is exposed on 
-    a NodePort, pushes will be rejected since the external Docker client needs to be set up to communicate with 
-    the registry through the NodePort, which will not match the internal registry endpoint. The push requests 
-    show the external NodePort as part of the registry request, and the Portus app rejects the push request. I 
-    tried setting the registry port internally to something in the NodePort range so that the NodePort could 
-    potentially be setup to be identical to the internal representation, but that seemed to break the registry app. 
-    It may be possible to change the internal port with some more config changes, but we probably want to address 
-    this in a cleaner way.
+* Image scanning. There is documentation explaining how to setup image scanning to periodically check 
+uploaded images for security purposes:
+http://port.us.org/features/6_security_scanning.html
    
 ###
 
@@ -75,22 +59,17 @@ value there.
 Once you have setup a User account, you will be prompted to associate the site with a registry. You can name 
 the registry whatever you want, but make sure to set:
     
-    `Hostname: registry:5000`
+    `Hostname: registry:30521`
 and do not check the box that says `Use SSL`.
 
 ###
 
 ## Pushing and pulling images
 
-In order to test that the registry is working correctly it is necessary to login to the registry within the 
-cluster. You can SSH into a node running in your cluster, and then you should be able to push and pull to the 
-registry. 
+You can access the Docker registry from `<node IP>:30521`.
 
-*Note, you will have to add the registry as an `--insecure-registry` to the Docker daemen running on the node 
-in order to be able to connect to it. I updated the hosts file on the node I was logged into on my cluster to 
-resolve the corresponding pod IP addresses to the domain names `portus` `nginx` and `registry`. I then added the 
-argument `--insecure-registry registry:5000` to `/etc/sysconfig/docker`. It was then necessary to restart the 
-Docker daemen on my node, which restarted all of the pods. But once they started back up I was able to check 
-that pushing and pulling worked. This is of course not ideal at all, but it demonstrates that the registry is 
-functional.
+`30521` is a NodePort set in the `registry/registry.svc.yml` file. So if you want to use a different port set the 
+value there.
+
+You will need to setup this endpoint as an insecure registry for your Docker client before you can access it.
 
