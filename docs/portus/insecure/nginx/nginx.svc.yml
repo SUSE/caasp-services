@@ -8,8 +8,5 @@ spec:
     - name: portus
       port: 80
       nodePort: 32123
-    - name: registry
-      port: 443
-      nodePort: 32124
   selector:
     name: portus-nginx-apps

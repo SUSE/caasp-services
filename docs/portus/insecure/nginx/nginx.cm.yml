@@ -52,35 +52,6 @@ data:
         server_name nginx; 
     
         ##
-        # SSL
-    
-        ssl off;
-    
-        # Certificates
-        # ssl_certificate /secrets/portus.crt;
-        # ssl_certificate_key /secrets/portus.key;
-    
-        # Enable session resumption to improve https performance
-        #
-        # http://vincent.bernat.im/en/blog/2011-ssl-session-reuse-rfc5077.html
-        # ssl_session_cache shared:SSL:10m;
-        # ssl_session_timeout 10m;
-    
-        # Enables server-side protection from BEAST attacks
-        # http://blog.ivanristic.com/2013/09/is-beast-still-a-threat.html
-        # ssl_prefer_server_ciphers on;
-    
-        # Disable SSLv3 (enabled by default since nginx 0.8.19)
-        # since it's less secure than TLS
-        # http://en.wikipedia.org/wiki/Secure_Sockets_Layer#SSL_3.0
-        # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    
-        # Ciphers chosen for forward secrecy and compatibility.
-        #
-        # http://blog.ivanristic.com/2013/08/configuring-apache-nginx-and-openssl-for-forward-secrecy.html
-        # ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
-    
-        ##
         # Docker-specific stuff.
     
         proxy_set_header Host $http_host;   # required for Docker client sake
@@ -160,17 +131,6 @@ data:
           proxy_read_timeout 900;
           proxy_buffering on;
         }
-    
-        # # Assets are mapped inside of /srv/Portus/public from a shared volume.
-        # location ~ ^/(assets)/ {
-        #   access_log  off;
-        #   gzip_static on;
-        #   expires     max;
-        #   add_header  Cache-Control public;
-        #   add_header  Last-Modified "";
-        #   add_header  ETag "";
-        #   break;
-        #  }
     
         # Portus handles everything else for the UI
         location / {

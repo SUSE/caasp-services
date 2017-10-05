@@ -3,13 +3,11 @@ kind: ConfigMap
 metadata:
   name: portus-registry-config
 data:
-  # Authentication 
-  REGISTRY_AUTH_TOKEN_REALM: http://nginx/v2/token
-  REGISTRY_AUTH_TOKEN_SERVICE: registry:5000 
-  REGISTRY_AUTH_TOKEN_ISSUER: nginx 
-  REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: secrets/portus.crt
+  REGISTRY_AUTH_TOKEN_REALM: "http://nginx/v2/token"
+  REGISTRY_AUTH_TOKEN_SERVICE: "registry:5000"
+  REGISTRY_AUTH_TOKEN_ISSUER: "nginx" 
+  REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "secrets/portus.crt"
 
-  # Portus Endpoints 
   REGISTRY_NOTIFICATIONS_ENDPOINTS: >
     - name: nginx 
       url: http://nginx/v2/webhooks/events

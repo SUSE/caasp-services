@@ -23,7 +23,6 @@ spec:
           mountPath: /etc/nginx
         ports:
           - containerPort: 80 
-          - containerPort: 443 
       volumes:
         - name: conf
           configMap:
