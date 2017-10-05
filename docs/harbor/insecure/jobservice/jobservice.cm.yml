@@ -18,6 +18,7 @@ data:
   GODEBUG: "netdns=cgo"
   EXT_ENDPOINT: "http://10.33.4.32 # reg.mydomain.com"
   TOKEN_URL: "http://ui"
+
   config: |
     appname = jobservice
     runmode = dev

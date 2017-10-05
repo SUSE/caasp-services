@@ -5,6 +5,7 @@ metadata:
 data:
   GODEBUG: "netdns=cgo"
   cert: ""
+
   config: |
     version: 0.1
     log:
