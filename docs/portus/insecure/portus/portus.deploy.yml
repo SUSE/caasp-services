@@ -65,6 +65,11 @@ spec:
               configMapKeyRef:
                name: portus-config
                key: RAILS_SERVE_STATIC_FILES
+          - name: PORTUS_SECURITY_CLAIR_SERVER
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_SECURITY_CLAIR_SERVER
         volumeMounts:
         - name: secrets
           mountPath: /certificates

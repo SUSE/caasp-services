@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portus-postgres-config 
+data:
+  POSTGRES_DATABASE: "postgres"
+  POSTGRES_USER: "clair"
+  POSTGRES_PASSWORD: "password"
