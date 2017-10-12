@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: harbor-mysql-deployment
+  labels:
+    name: harbor-mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: harbor-mysql-apps
+  template:
+    metadata:
+      labels:
+        name: harbor-mysql-apps
+    spec:
+      containers:
+      - name: harbor-mysql-apps
+        image: vmware/harbor-db:v1.2.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom: 
+              configMapKeyRef: 
+               name: harbor-mysql-config
+               key: MYSQL_ROOT_PASSWORD

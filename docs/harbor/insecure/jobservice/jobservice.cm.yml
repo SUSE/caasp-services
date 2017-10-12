@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: harbor-jobservice-config
+data:
+  MYSQL_HOST: "mysql"
+  MYSQL_PORT: "3306"
+  MYSQL_USR: "root"
+  MYSQL_PWD: "root123"
+  UI_SECRET: "FqlQvjkCUcuObAAu"
+  SECRET_KEY: "Our70VfxrN6uWV4D"
+  CONFIG_PATH: "/etc/jobservice/app.conf"
+  REGISTRY_URL: "http://registry:5000"
+  VERIFY_REMOTE_CERT: "on"
+  MAX_JOB_WORKERS: "3"
+  LOG_LEVEL: "debug"
+  LOG_DIR: "/var/log/jobs"
+  GODEBUG: "netdns=cgo"
+  EXT_ENDPOINT: "http://10.33.4.32 # reg.mydomain.com"
+  TOKEN_URL: "http://ui"
+
+  config: |
+    appname = jobservice
+    runmode = dev
+    [dev]
+    httpport = 80

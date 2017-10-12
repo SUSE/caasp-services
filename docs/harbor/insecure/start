@@ -1,0 +1,30 @@
+#! /bin/bash
+kubectl apply -f mysql/mysql.cm.yml
+kubectl apply -f mysql/mysql.deploy.yml
+kubectl apply -f mysql/mysql.svc.yml
+echo "Mysql added"
+
+kubectl apply -f adminserver/adminserver.cm.yml
+kubectl apply -f adminserver/adminserver.deploy.yml
+kubectl apply -f adminserver/adminserver.svc.yml
+echo "Web backend added"
+
+kubectl apply -f jobservice/jobservice.cm.yml
+kubectl apply -f jobservice/jobservice.deploy.yml
+kubectl apply -f jobservice/jobservice.svc.yml
+echo "Background processing added"
+
+kubectl apply -f ui/ui.cm.yml
+kubectl apply -f ui/ui.deploy.yml
+kubectl apply -f ui/ui.svc.yml
+echo "Web UI added"
+
+kubectl apply -f registry/registry.cm.yml
+kubectl apply -f registry/registry.deploy.yml
+kubectl apply -f registry/registry.svc.yml
+echo "Docker registry added"
+
+kubectl apply -f nginx/nginx.cm.yml
+kubectl apply -f nginx/nginx.deploy.yml
+kubectl apply -f nginx/nginx.svc.yml
+echo "Nginx server added"
