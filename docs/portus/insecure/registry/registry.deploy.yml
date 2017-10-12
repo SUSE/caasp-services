@@ -19,7 +19,7 @@ spec:
         image: library/registry:2.6
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 30521
+        - containerPort: 5000
         - containerPort: 5001
         env:
           - name: REGISTRY_AUTH_TOKEN_REALM

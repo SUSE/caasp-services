@@ -4,7 +4,7 @@ metadata:
   name: portus-registry-config
 data:
   REGISTRY_AUTH_TOKEN_REALM: "http://nginx:32123/v2/token"
-  REGISTRY_AUTH_TOKEN_SERVICE: "registry:30521"
+  REGISTRY_AUTH_TOKEN_SERVICE: "registry:5000"
   REGISTRY_AUTH_TOKEN_ISSUER: "nginx" 
   REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "secrets/portus.crt"
 
@@ -23,7 +23,7 @@ data:
       delete:
         enabled: true
     http:
-      addr: 0.0.0.0:30521
+      addr: 0.0.0.0:5000
       debug:
         addr: 0.0.0.0:5001
 
