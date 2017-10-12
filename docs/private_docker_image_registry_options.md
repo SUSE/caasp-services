@@ -14,6 +14,8 @@ both provide web based UI's, and have fully containerized solutions. Each have a
 - Written in Ruby on Rails.
 - Configured to run on a Puma web server (or ngnix), a Mariadb database, the Docker registry, and a crono process to keep the 
 Docker Registry and database synced up.
+- Optional CoreOs Clair component, which can be setup for auditing purposes- it scans uploaded Images and warns of 
+vulnerabilities.
 
 #### Web Interface
 
@@ -32,6 +34,24 @@ actions, and which send data to a provided URL. Webhooks can be disabled.
 - Users can comment on Images.
 - Logs can be downloaded as CSV files.
 
+### Kubernetes Implementation Concerns
+
+- Logging into the Docker registry from outside of the cluster. The internal domain name and port of the Portus application 
+is used internally as a user authentication and token authoring service, but this same endpoint is passed to the Docker 
+client outside of the cluster if the user tries to authenticate outside of the cluster. So ensuring that the same endpoint 
+is resolvable inside and outside the cluster is a challenge.
+- Token authoring endpoint, when setup with an Nginx proxy. If Nginx is setup as an access point for both Portus and the
+registry, which is a common design choice for Docker registry/custom web ui combinations, then a problem arises with the
+token authorization authored from Portus. Traffic to Portus is routed through Nginx, so when the registry requests a token
+from Portus, it sends and receives the request through Nginx. The problem is, Portus references it's own domain name
+when authoring the token, and the registry only trusts it when it matches the name of the server it receives the response
+from. When routed through Nginx, the token is rejected if Nginx has a different domain name than the name of the domain
+set within the Portus Rails app. This can be avoided by setting the FQDN in the Rails app equal to the name of the Nginx
+service in Kubernetes, but that is not ideal.
+- Setting up and authoring certificates. Since the internal IP addresses of all of the pods that house the different
+components of a Portus deployment are not known before deploying, setting up keys and certificates to implement SSL 
+communication is tricky.
+
 ## Harbor
 
 #### Overview
@@ -41,6 +61,7 @@ actions, and which send data to a provided URL. Webhooks can be disabled.
 - Configured to run on an ngnix web server, with a Mysql database, a component to run background replication jobs, a frontend 
 and a backend component, and the Docker Registry.
 - Harbor provides basic documentation for deploying with Kubernetes.
+- Optional Notary component, which can be setup for auditing purposes- it scans uploaded Images and warns of vulnerabilities.
 
 #### Web Interface
 
@@ -61,4 +82,8 @@ Self registration can be turned off as well.
 - Logs can be filtered by both date range and search terms.
 - Multi language support. Right now there is only one language translations (I think it is Madarin, but I am not sure), but 
 this might be expanded to support more languages in the future.
-- Optional Notary component, which can be setup for auditing purposes- it scans uploaded Images and warns of vulnerabilities.
+
+### Kubernetes Implementation Concerns
+
+- Setting up and authoring certificates. The issue of adding keys and trusting certificates to the Harbor implementation
+when deploying to Kubernetes is similarly difficult.
