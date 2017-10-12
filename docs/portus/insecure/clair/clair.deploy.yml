@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-clair-deployment 
+  labels:
+    name: portus-clair-deployment
+spec:
+  replicas: 1 
+  selector: 
+    matchLabels:
+      name: portus-clair-apps
+  template:
+    metadata:
+      labels:
+        name: portus-clair-apps 
+    spec:
+      containers:
+      - name: portus-clair 
+        image: quay.io/coreos/clair:latest
+        imagePullPolicy: IfNotPresent
+        args: ["--insecure-tls"] 
+        ports:
+        - name: clair-api
+          containerPort: 6060
+          protocol: TCP
+        - name: clair-health
+          containerPort: 6061
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /etc/clair
+      volumes:
+      - name: config
+        configMap:
+          name: portus-clair-config  
+          items:
+          - key: config
+            path: config.yaml

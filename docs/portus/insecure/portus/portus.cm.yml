@@ -13,6 +13,7 @@ data:
   PORTUS_CHECK_SSL_USAGE_ENABLED: "false"
   RAILS_SERVE_STATIC_FILES: "true"
   PORTUS_INIT_COMMAND: "bin/crono"
+  PORTUS_SECURITY_CLAIR_SERVER: "clair:6060"
  
   key: |
     -----BEGIN RSA PRIVATE KEY-----

@@ -1,4 +1,15 @@
 #! /bin/bash
+
+kubectl delete cm portus-postgres-config
+kubectl delete deploy portus-postgres-deployment 
+kubectl delete svc postgres 
+echo "Clair Postgres database removed"
+
+kubectl delete cm portus-clair-config
+kubectl delete deploy portus-clair-deployment 
+kubectl delete svc clair 
+echo "Clair removed"
+
 kubectl delete cm portus-db-config 
 kubectl delete deploy portus-db-deployment 
 kubectl delete svc db 

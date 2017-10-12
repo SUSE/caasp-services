@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-postgres-deployment 
+  labels:
+    name: portus-postgres-deployment
+spec:
+  replicas: 1 
+  selector: 
+    matchLabels:
+      name: portus-postgres-apps
+  template:
+    metadata:
+      labels:
+        name: portus-postgres-apps 
+    spec:
+      containers:
+      - name: portus-postgres-apps 
+        image: library/postgres:10.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+        env:
+          - name: POSTGRES_DATABASE
+            valueFrom:
+              configMapKeyRef:
+               name: portus-postgres-config
+               key: POSTGRES_DATABASE
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: portus-postgres-config
+                key: POSTGRES_USER
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+               name: portus-postgres-config
+               key: POSTGRES_PASSWORD

@@ -1,4 +1,15 @@
 #! /bin/bash
+
+kubectl apply -f postgres/postgres.cm.yml
+kubectl apply -f postgres/postgres.deploy.yml
+kubectl apply -f postgres/postgres.svc.yml
+echo "Clair Postgres database added"
+
+kubectl apply -f clair/clair.cm.yml
+kubectl apply -f clair/clair.deploy.yml
+kubectl apply -f clair/clair.svc.yml
+echo "Clair added"
+
 kubectl apply -f db/db.cm.yml
 kubectl apply -f db/db.deploy.yml
 kubectl apply -f db/db.svc.yml
