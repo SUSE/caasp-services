@@ -1,0 +1,80 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-deployment
+  labels:
+    name: portus-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: portus-apps
+  template:
+    metadata:
+      labels:
+        name: portus-apps
+    spec:
+      containers:
+      - name: portus-apps
+        image: jbonham/portus-dev:insecure
+        ports:
+        - containerPort: 3000
+        env:
+          - name: PORTUS_MACHINE_FQDN_VALUE
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_MACHINE_FQDN_VALUE
+          - name: PORTUS_PRODUCTION_HOST
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_PRODUCTION_HOST
+          - name: PORTUS_PRODUCTION_DATABASE
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_PRODUCTION_DATABASE
+          - name: PORTUS_KEY_PATH
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_KEY_PATH
+          - name: PORTUS_CHECK_SSL_USAGE_ENABLED
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_CHECK_SSL_USAGE_ENABLED
+          - name: RAILS_SERVE_STATIC_FILES
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: RAILS_SERVE_STATIC_FILES
+          - name: PORTUS_PRODUCTION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+               name: portus-secrets
+               key: PORTUS_PRODUCTION_PASSWORD
+          - name: PORTUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+               name: portus-secrets
+               key: PORTUS_SECRET_KEY_BASE
+          - name: PORTUS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+               name: portus-secrets
+               key: PORTUS_PASSWORD
+        volumeMounts:
+        - name: certvol
+          mountPath: /certificates
+          readOnly: true
+      volumes:
+        - name: certvol
+          secret:
+            secretName: portus-secrets
+            items:
+            - key: key
+              path: portus.key
+            - key: cert
+              path: portus.crt

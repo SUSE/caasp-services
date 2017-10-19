@@ -1,0 +1,75 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-crono-deployment
+  labels:
+    name: portus-crono-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: portus-crono-apps
+  template:
+    metadata:
+      labels:
+        name: portus-crono-apps
+    spec:
+      containers:
+        - name: portus-crono-apps
+          image: jbonham/portus-dev:insecure
+          command:
+          - /srv/Portus/bin/crono
+          env:
+          - name: PORTUS_MACHINE_FQDN_VALUE
+            valueFrom:
+              configMapKeyRef:
+                key: PORTUS_MACHINE_FQDN_VALUE
+                name: portus-config
+          - name: PORTUS_PRODUCTION_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: PORTUS_PRODUCTION_HOST
+                name: portus-config
+          - name: PORTUS_PRODUCTION_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: PORTUS_PRODUCTION_DATABASE
+                name: portus-config
+          - name: PORTUS_KEY_PATH
+            valueFrom:
+              configMapKeyRef:
+                key: PORTUS_KEY_PATH
+                name: portus-config
+          - name: PORTUS_INIT_COMMAND
+            valueFrom:
+              configMapKeyRef:
+                key: PORTUS_INIT_COMMAND
+                name: portus-config
+          - name: PORTUS_PRODUCTION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+               name: portus-secrets
+               key: PORTUS_PRODUCTION_PASSWORD
+          - name: PORTUS_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+               name: portus-secrets
+               key: PORTUS_SECRET_KEY_BASE
+          - name: PORTUS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+               name: portus-secrets
+               key: PORTUS_PASSWORD
+          volumeMounts:
+            - name: certvol
+              mountPath: /certificates
+              readOnly: true
+      volumes:
+        - name: certvol
+          secret:
+            secretName: portus-secrets
+            items:
+            - key: key
+              path: portus.key
+            - key: cert
+              path: portus.crt

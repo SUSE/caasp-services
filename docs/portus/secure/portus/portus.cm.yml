@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portus-config
+data:
+  PORTUS_INIT_COMMAND: "bin/crono"
+  PORTUS_MACHINE_FQDN_VALUE: "portus"
+  PORTUS_PRODUCTION_HOST: "db"
+  PORTUS_PRODUCTION_DATABASE: "portus"
+  PORTUS_KEY_PATH: "/certificates/portus.key"
+  PORTUS_CHECK_SSL_USAGE_ENABLED: "false"
+  RAILS_SERVE_STATIC_FILES: "true"

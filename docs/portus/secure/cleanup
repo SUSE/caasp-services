@@ -1,0 +1,23 @@
+#! /bin/bash
+kubectl delete cm portus-db-config 
+kubectl delete deploy portus-db-deployment 
+kubectl delete svc db 
+echo "Database removed"
+
+kubectl delete cm portus-config
+kubectl delete deploy portus-deployment 
+kubectl delete svc portus 
+echo "Web UI removed"
+
+kubectl delete deploy portus-crono-deployment 
+echo "Background processing removed"
+
+kubectl delete cm portus-registry-config
+kubectl delete deploy portus-registry-deployment 
+kubectl delete svc registry 
+echo "Docker registry removed"
+
+kubectl delete cm portus-nginx-config
+kubectl delete deploy portus-nginx-deployment 
+kubectl delete svc nginx 
+echo "Nginx server removed"
