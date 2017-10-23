@@ -1,0 +1,71 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: portus-registry-deployment
+  labels:
+    name: portus-registry-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: portus-registry-apps
+  template:
+    metadata:
+      labels:
+        name: portus-registry-apps
+    spec:
+      containers:
+        - name: portus-registry-app
+          image: library/registry:2.6
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+            - containerPort: 5001
+          env:
+            - name: REGISTRY_AUTH_TOKEN_REALM
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_AUTH_TOKEN_REALM
+            - name: REGISTRY_AUTH_TOKEN_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_AUTH_TOKEN_SERVICE
+            - name: REGISTRY_AUTH_TOKEN_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_AUTH_TOKEN_ISSUER
+            - name: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+            - name: REGISTRY_NOTIFICATIONS_ENDPOINTS
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_NOTIFICATIONS_ENDPOINTS
+          volumeMounts:
+            - name: config
+              mountPath: /etc/docker/registry
+              readOnly: true
+            - name: certvol
+              mountPath: /certificates
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: portus-registry-config
+            items:
+              - key: config
+                path: config.yml
+        - name: certvol
+          secret:
+            secretName: portus-secrets
+            items:
+            - key: key
+              path: portus.key
+            - key: cert
+              path: portus.crt
