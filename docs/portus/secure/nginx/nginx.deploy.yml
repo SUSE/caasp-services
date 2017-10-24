@@ -16,14 +16,25 @@ spec:
     spec:
       containers:
       - name: portus-nginx-apps
-        image: library/nginx:alpine 
+        image: library/nginx:alpine
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: conf
           mountPath: /etc/nginx
+        - name: certvol
+          mountPath: /certificates
+          readOnly: true
         ports:
-          - containerPort: 32123 
+          - containerPort: 443
       volumes:
+        - name: certvol
+          secret:
+            secretName: portus-secrets
+            items:
+            - key: key
+              path: portus.key
+            - key: cert
+              path: portus.crt
         - name: conf
           configMap:
             name: portus-nginx-config

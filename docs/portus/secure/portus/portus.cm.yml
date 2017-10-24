@@ -4,9 +4,10 @@ metadata:
   name: portus-config
 data:
   PORTUS_INIT_COMMAND: "bin/crono"
-  PORTUS_MACHINE_FQDN_VALUE: "portus"
+  PORTUS_MACHINE_FQDN_VALUE: "10.17.3.95.nip.io"
   PORTUS_PRODUCTION_HOST: "db"
   PORTUS_PRODUCTION_DATABASE: "portus"
   PORTUS_KEY_PATH: "/certificates/portus.key"
+  PORTUS_CERT_PATH: "/certificates/portus.crt"
   PORTUS_CHECK_SSL_USAGE_ENABLED: "false"
   RAILS_SERVE_STATIC_FILES: "true"

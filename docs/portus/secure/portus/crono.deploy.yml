@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
         - name: portus-crono-apps
-          image: jbonham/portus-dev:insecure
-          command:
-          - /srv/Portus/bin/crono
+          image: opensuse/portus:head
+          command: ["/bin/sh"]
+          args: ["-c", "cp /certificates/portus.crt /usr/local/share/ca-certificates;update-ca-certificates;/srv/Portus/bin/crono"]
           env:
           - name: PORTUS_MACHINE_FQDN_VALUE
             valueFrom:
@@ -45,6 +45,21 @@ spec:
               configMapKeyRef:
                 key: PORTUS_INIT_COMMAND
                 name: portus-config
+          - name: PORTUS_PUMA_HOST
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_MACHINE_FQDN_VALUE
+          - name: PORTUS_PUMA_TLS_KEY
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_KEY_PATH
+          - name: PORTUS_PUMA_TLS_CERT
+            valueFrom:
+              configMapKeyRef:
+               name: portus-config
+               key: PORTUS_CERT_PATH
           - name: PORTUS_PRODUCTION_PASSWORD
             valueFrom:
               secretKeyRef:

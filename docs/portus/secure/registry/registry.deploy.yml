@@ -18,6 +18,9 @@ spec:
         - name: portus-registry-app
           image: library/registry:2.6
           imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "cp /certificates/portus.crt /usr/local/share/ca-certificates;update-ca-certificates;registry serve /etc/docker/registry/config.yml"]
+
           ports:
             - containerPort: 5000
             - containerPort: 5001
@@ -42,6 +45,16 @@ spec:
                 configMapKeyRef:
                   name: portus-registry-config
                   key: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+            - name: REGISTRY_HTTP_TLS_CERTIFICATE
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_HTTP_TLS_CERTIFICATE
+            - name: REGISTRY_HTTP_TLS_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: portus-registry-config
+                  key: REGISTRY_HTTP_TLS_KEY
             - name: REGISTRY_NOTIFICATIONS_ENDPOINTS
               valueFrom:
                 configMapKeyRef:
