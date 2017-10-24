@@ -5,7 +5,7 @@ metadata:
 data:
   REGISTRY_AUTH_TOKEN_REALM: "https://10.17.3.95.nip.io:32123/v2/token"
   REGISTRY_AUTH_TOKEN_SERVICE: "registry:5000"
-  REGISTRY_AUTH_TOKEN_ISSUER: "portus.test.lan"
+  REGISTRY_AUTH_TOKEN_ISSUER: "portus"
   REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
   REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
   REGISTRY_HTTP_TLS_KEY: "/certificates/portus.key"
