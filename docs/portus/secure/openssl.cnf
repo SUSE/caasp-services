@@ -355,7 +355,8 @@ ess_cert_id_chain	= no	# Must the ESS cert id chain be included?
 
 DNS.1        = *.us.to
 DNS.2        = *.dyndns.org
-DNS.3        = portus
-DNS.4        = registry
-DNS.5        = nginx
-DNS.6        = nginx.portus.svc.cluster.local
+DNS.3        = *.nip.io
+DNS.4        = portus
+DNS.5        = registry
+DNS.6        = nginx
+DNS.7        = nginx.portus.svc.cluster.local
