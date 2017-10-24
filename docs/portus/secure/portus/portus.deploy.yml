@@ -69,6 +69,10 @@ spec:
         - name: certvol
           mountPath: /certificates
           readOnly: true
+        - name: config
+          mountPath: /srv/Portus/config/config.yml
+          subPath: etc/config.yml 
+          readOnly: true
       volumes:
         - name: certvol
           secret:
@@ -78,3 +82,9 @@ spec:
               path: portus.key
             - key: cert
               path: portus.crt
+        - name: config
+          configMap:
+            name: portus-config
+            items:
+              - key: config
+                path: etc/config.yml
