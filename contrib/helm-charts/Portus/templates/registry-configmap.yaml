@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.portus.fqdnValue }}:{{ .Values.nginx.externalPort }}/v2/token"
+  REGISTRY_AUTH_TOKEN_SERVICE: "{{ .Values.registry.name }}:{{ .Values.registry.port }}"
+  REGISTRY_AUTH_TOKEN_ISSUER: {{ .Values.portus.name | quote }} 
+  REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
+  REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
+  REGISTRY_HTTP_TLS_KEY: "/certificates/portus.key"
+  REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+    - name: {{ .Values.nginx.name }} 
+      url: https://{{ .Values.nginx.name }}/v2/webhooks/events
+      timeout: 2000ms
+      threshold: 5
+      backoff: 1s
+  config: |
+    version: 0.1
+    storage:
+      filesystem:
+        rootdirectory: /var/lib/registry
+      delete:
+        enabled: true
+    http:
+      addr: 0.0.0.0:{{ .Values.registry.port }}
+      debug:
+        addr: 0.0.0.0:{{ .Values.registry.debugPort }}

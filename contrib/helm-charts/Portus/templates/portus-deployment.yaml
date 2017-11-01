@@ -1,0 +1,121 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-{{ .Values.portus.name }}" 
+  labels:
+    name: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.portus.replicas }}
+  selector:
+    matchLabels:
+      name: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+  template:
+    metadata:
+      labels:
+        name: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}-{{ .Values.portus.name }}" 
+          image: "{{ .Values.portus.image.repository }}:{{ .Values.portus.image.tag }}"
+          imagePullPolicy: {{ .Values.portus.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.portus.port }}
+          env:
+            - name: PORTUS_MACHINE_FQDN_VALUE
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_MACHINE_FQDN_VALUE
+            - name: PORTUS_PASSWORD
+              valueFrom:
+                secretKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_PASSWORD
+            - name: PORTUS_PRODUCTION_HOST
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_PRODUCTION_HOST
+            - name: PORTUS_PRODUCTION_DATABASE
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_PRODUCTION_DATABASE
+            - name: PORTUS_PRODUCTION_USERNAME
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_PRODUCTION_USERNAME
+            - name: PORTUS_PRODUCTION_PASSWORD
+              valueFrom:
+                secretKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_PRODUCTION_PASSWORD
+            - name: PORTUS_KEY_PATH
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_KEY_PATH
+            - name: PORTUS_CERT_PATH
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_CERT_PATH
+            - name: PORTUS_SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_SECRET_KEY_BASE
+            - name: PORTUS_CHECK_SSL_USAGE_ENABLED
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_CHECK_SSL_USAGE_ENABLED
+            - name: PORTUS_PUMA_HOST
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_MACHINE_FQDN_VALUE
+            - name: PORTUS_PUMA_TLS_KEY
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_KEY_PATH
+            - name: PORTUS_PUMA_TLS_CERT
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: PORTUS_CERT_PATH
+            - name: RAILS_SERVE_STATIC_FILES 
+              valueFrom:
+                configMapKeyRef: 
+                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
+                  key: RAILS_SERVE_STATIC_FILES
+          volumeMounts:
+            - name: certvol
+              mountPath: /certificates
+              readOnly: true
+            - name: config
+              mountPath: /srv/Portus/config/config.yml
+              subPath: etc/config.yml
+              readOnly: true
+      volumes:
+        - name: certvol
+          secret:
+            secretName: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+            items:
+              - key: key
+                path: portus.key
+              - key: cert
+                path: portus.crt
+        - name: config
+          configMap:
+            name: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+            items:
+              - key: config
+                path: etc/config.yml
