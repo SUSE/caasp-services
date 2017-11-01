@@ -1,26 +1,70 @@
-# Default values for Portus.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## Default values for Portus Helm Chart.
+## This is a YAML-formatted file.
+## Declare variables to be passed into your templates.
 
-Master:
-  Name: portus-master
-  Image: "opensuse/portus"
-  ImageTag: "head"
-  Replicas: 1
+## Default values for Portus
+##
+portus:
+  name: "portus"
+  image:
+    repository: "opensuse/portus"
+    tag: "head"
+    pullPolicy: "IfNotPresent" 
+  replicas: 1
+  port: 3000
   
-Crono:
-  Name: portus-crono
-  Image: "opensuse/portus"
-  ImageTag: "head"
-  Replicas: 1
+  ## Configuration values for Portus.
+  ## 
+  fqdnValue: "portus-test.us.to" # TODO: this needs to be abstracted
+  productionHost: "mariadb"      # name of database host 
+  productionDatabase: "portus"   # name of database
+  productionUsername: "root"     # database user
+  railsServeStaticFiles: true 
 
-Registry:
-  Name: portus-registry
-  Image: "library/registry"
-  ImageTag: "latest"
-  Replicas: 1
+  ## Secret values for Portus.
+  ## 
+  password: "cGFzc3dvcmQ="         
+  productionPassword: "cGFzc3dvcmQ="
+  secretKeyBase:  "YjQ5NGEyNWZhYThkMjJlNDMwZTg0M2UyMjBlNDI0ZTEwYWM4NGQyY2UwZTY0MjMxZjViNjM2ZDIxMjUxZWI2ZDI2N2FkYjA0MmFkNTg4NGNiZmYwZjM4OTFiY2Y5MTFiZGY4YWJiM2NlNzE5ODQ5Y2NkYTlhNDg4OTI0OWU1YzI="
+ 
+## Default values for Crono. 
+##
+crono:
+  name: "crono"
+  image:
+    repository: "opensuse/portus"
+    tag: "head"
+    pullPolicy: "IfNotPresent"
+  replicas: 1
 
-Nginx:
-  Name: portus-nginx
-  Image: "library/nginx"
-  ImageTag: "alpine"
+## Default values for Docker Registry. 
+##
+registry:
+  name: "registry"
+  image: 
+    repository: "library/registry"
+    tag: "latest" 
+    pullPolicy: "IfNotPresent"
+  replicas: 1
+  port: "5000"
+  debugPort: "5001"
+    
+## Default values for Nginx. 
+##
+nginx:
+  name: "portus-nginx"
+  image: 
+    repository: "library/nginx"
+    tag: "alpine"
+    pullPolicy: "IfNotPresent"
+  port: "443"
+  externalPort: "32123"
+
+## Default values for Mariadb. 
+##
+mariadb:
+  persistence:
+    enabled: false
+  usePassword: true
+  mariadbRootPassword: "password" 
+  mariadbDatabase: "portus"
