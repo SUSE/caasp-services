@@ -41,6 +41,11 @@ crono:
 ##
 registry:
   name: "registry"
+  mountPath: "/storage"
+  persistence:
+    enabled: true
+    accessMode: "ReadWriteOnce"
+    capacity: "10Gi"
   image: 
     repository: "library/registry"
     tag: "latest" 
@@ -48,11 +53,11 @@ registry:
   replicas: 1
   port: "5000"
   debugPort: "5001"
-    
+
 ## Default values for Nginx. 
 ##
 nginx:
-  name: "portus-nginx"
+  name: "nginx"
   image: 
     repository: "library/nginx"
     tag: "alpine"
