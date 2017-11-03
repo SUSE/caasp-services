@@ -57,7 +57,7 @@ registry:
 ## Default values for Nginx. 
 ##
 nginx:
-  name: "portus-nginx"
+  name: "nginx"
   image: 
     repository: "library/nginx"
     tag: "alpine"
