@@ -71,6 +71,8 @@ spec:
             - name: config
               mountPath: /etc/docker/registry
               readOnly: true
+            - name: storage
+              mountPath: {{ .Values.registry.mountPath }}
       volumes:
         - name: certvol
           secret:
@@ -86,3 +88,10 @@ spec:
             items:
               - key: config
                 path: config.yml
+        - name: storage
+          {{- if .Values.registry.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

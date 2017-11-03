@@ -24,7 +24,7 @@ data:
     version: 0.1
     storage:
       filesystem:
-        rootdirectory: /var/lib/registry
+        rootdirectory: {{ .Values.registry.mountPath }}
       delete:
         enabled: true
     http:
