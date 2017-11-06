@@ -46,11 +46,6 @@ spec:
                 configMapKeyRef: 
                   name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
                   key: PORTUS_PRODUCTION_DATABASE
-            - name: PORTUS_PRODUCTION_USERNAME
-              valueFrom:
-                configMapKeyRef: 
-                  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"  
-                  key: PORTUS_PRODUCTION_USERNAME
             - name: PORTUS_PRODUCTION_PASSWORD
               valueFrom:
                 secretKeyRef: 

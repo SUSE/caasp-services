@@ -9,9 +9,12 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   PORTUS_MACHINE_FQDN_VALUE: {{ .Values.portus.fqdnValue | quote }}
-  PORTUS_PRODUCTION_HOST: "{{ .Release.Name }}-{{ .Values.portus.productionHost }}"
-  PORTUS_PRODUCTION_DATABASE: {{ .Values.portus.productionDatabase | quote }}
-  PORTUS_PRODUCTION_USERNAME: {{ .Values.portus.productionUsername | quote }}
+  {{- if .Values.mariadb.enabled }}
+  PORTUS_PRODUCTION_HOST: "{{ .Release.Name }}-mariadb"
+  {{- else }}
+  PORTUS_PRODUCTION_HOST: {{ .Values.mariadb.name | quote }}
+  {{- end }}
+  PORTUS_PRODUCTION_DATABASE: {{ .Values.mariadb.mariadbDatabase | quote }}
   PORTUS_KEY_PATH: "/certificates/portus.key"
   PORTUS_CERT_PATH: "/certificates/portus.crt"
   PORTUS_CHECK_SSL_USAGE_ENABLED: "true" 

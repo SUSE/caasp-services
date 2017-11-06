@@ -16,9 +16,6 @@ portus:
   ## Configuration values for Portus.
   ## 
   fqdnValue: "portus-test.us.to" # TODO: this needs to be abstracted
-  productionHost: "mariadb"      # name of database host 
-  productionDatabase: "portus"   # name of database
-  productionUsername: "root"     # database user
   railsServeStaticFiles: true 
 
   ## Secret values for Portus.
@@ -68,8 +65,22 @@ nginx:
 ## Default values for Mariadb. 
 ##
 mariadb:
+  ## Use Mariadb chart dependency
+  ## Set to false if using your own Mariadb
+  ##
+  enabled: true
+
+  ## If using your own Mariadb deployment, provide the name of the service here
+  ##
+  # name:
+
   persistence:
     enabled: false
+    accessMode: "ReadWriteOnce"
+    size: "8Gi"
+
+  ## Configuration values for Mariadb.
+  ##
   usePassword: true
-  mariadbRootPassword: "password" 
+  mariadbRootPassword: "password"
   mariadbDatabase: "portus"
