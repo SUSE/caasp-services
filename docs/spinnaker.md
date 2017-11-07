@@ -25,7 +25,7 @@ Prerequisites: Running CaaSP cluster with >= 8GB RAM, local kube config (`~/.kub
    - `docker run -p 8084:8084 -p 9000:9000 --name halyard --rm -v ~/.hal:/root/.hal -v ~/.kube:/root/.kube --net=host gcr.io/spinnaker-marketplace/halyard:stable`
    - `docker exec -it halyard bash`
    - https://www.spinnaker.io/setup/install/halyard/#docker
-2. Configure persistent storage with Redis
+2. <del>Configure persistent storage with Redis</del> https://github.com/spinnaker/spinnaker/issues/1988
    - https://www.spinnaker.io/setup/storage/redis/
 3. Configure Docker registry
    - https://www.spinnaker.io/setup/providers/docker-registry/
