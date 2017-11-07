@@ -18,7 +18,7 @@ Halyard does not successfully deploy Spinnaker to CaasP due to a bug related to 
 
 #### Process
 
-Prerequisites: Running CaaSP cluster with >= 8GB RAM, local kube config (`~/kube.config`)
+Prerequisites: Running CaaSP cluster with >= 8GB RAM, local kube config (`~/.kube/config`)
 
 1. Install Halyard via Docker
    - `mkdir ~/.hal`
