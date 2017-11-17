@@ -8,7 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-
   PORTUS_MACHINE_FQDN_VALUE: {{ .Values.nginx.fqdn | quote }}
   {{- if .Values.mariadb.enabled }}
   PORTUS_PRODUCTION_HOST: "{{ .Release.Name }}-mariadb"
