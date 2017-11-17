@@ -53,7 +53,7 @@ data:
       }
 
       server {
-        listen {{ .Values.nginx.port }} ssl http2;
+        listen {{ .Values.nginx.service.port }} ssl http2;
         server_name "{{ .Values.nginx.name }}"
         # root /srv/Portus/public;
 

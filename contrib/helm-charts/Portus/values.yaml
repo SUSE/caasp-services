@@ -9,14 +9,13 @@ portus:
   image:
     repository: "opensuse/portus"
     tag: "head"
-    pullPolicy: "IfNotPresent" 
+    pullPolicy: "IfNotPresent"
   replicas: 1
   port: 3000
-  
+
   ## Configuration values for Portus.
-  ## 
-  fqdnValue: "portus-test.us.to" # TODO: this needs to be abstracted
-  railsServeStaticFiles: true 
+  ##
+  railsServeStaticFiles: true
 
   ## Database values
   ##
@@ -26,11 +25,11 @@ portus:
   productionPassword: "cGFzc3dvcmQ=" # database password
 
   ## Secret values for Portus.
-  ## 
-  password: "cGFzc3dvcmQ="         
+  ##
+  password: "cGFzc3dvcmQ="
   secretKeyBase:  "YjQ5NGEyNWZhYThkMjJlNDMwZTg0M2UyMjBlNDI0ZTEwYWM4NGQyY2UwZTY0MjMxZjViNjM2ZDIxMjUxZWI2ZDI2N2FkYjA0MmFkNTg4NGNiZmYwZjM4OTFiY2Y5MTFiZGY4YWJiM2NlNzE5ODQ5Y2NkYTlhNDg4OTI0OWU1YzI="
- 
-## Default values for Crono. 
+
+## Default values for Crono.
 ##
 crono:
   name: "crono"
@@ -40,7 +39,7 @@ crono:
     pullPolicy: "IfNotPresent"
   replicas: 1
 
-## Default values for Docker Registry. 
+## Default values for Docker Registry.
 ##
 registry:
   name: "registry"
@@ -49,26 +48,55 @@ registry:
     enabled: true
     accessMode: "ReadWriteOnce"
     capacity: "10Gi"
-  image: 
+  image:
     repository: "library/registry"
-    tag: "latest" 
+    tag: "latest"
     pullPolicy: "IfNotPresent"
   replicas: 1
   port: "5000"
   debugPort: "5001"
 
-## Default values for Nginx. 
+## Default values for Nginx.
 ##
 nginx:
   name: "nginx"
-  image: 
+  image:
     repository: "library/nginx"
     tag: "alpine"
     pullPolicy: "IfNotPresent"
-  port: "443"
-  externalPort: "32123"
 
-## Default values for Mariadb. 
+  ## Domain name for entry point
+  ##
+  fqdn: "portus-test.us.to"
+
+  ## Service configuration.
+  ##
+  service:
+    ## If using Ingress use type ClusterIP, else use NodePort
+    ##
+    type: "NodePort"
+    port: "443"
+    nodePort: "32123"
+
+  ingress:
+    enabled: false
+
+    ## Anntations to be added to the web ingress
+    ##
+    annotations:
+      kubernetes.io/ingress.class: "nginx"
+      kubernetes.io/ingress.allow-http: "false"
+      ingress.kubernetes.io/ssl-passthrough: "true"
+
+    port: "32123"
+
+    ## TLS configuration
+    ## Secrets must be manually created in the namespace
+    ##
+    tls:
+      secretName: "portus-tls"
+
+## Default values for Mariadb.
 ##
 mariadb:
   ## Use Mariadb chart dependency

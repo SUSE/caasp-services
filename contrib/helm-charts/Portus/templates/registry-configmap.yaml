@@ -8,7 +8,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.portus.fqdnValue }}:{{ .Values.nginx.externalPort }}/v2/token"
+  {{- if .Values.nginx.ingress.enabled }}
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.fqdn }}:{{ .Values.nginx.ingress.port }}/v2/token"
+  {{- else if and (eq "NodePort" .Values.nginx.service.type) .Values.nginx.service.nodePort }}
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.fqdn }}:{{ .Values.nginx.service.nodePort }}/v2/token"
+  {{- else }}
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.fqdn }}:{{ .Values.ningx.service.port }}/v2/token"
+  {{- end }}
   REGISTRY_AUTH_TOKEN_SERVICE: "{{ .Values.registry.name }}:{{ .Values.registry.port }}"
   REGISTRY_AUTH_TOKEN_ISSUER: {{ .Values.portus.name | quote }} 
   REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"

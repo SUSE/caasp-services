@@ -10,8 +10,10 @@ metadata:
 spec:
   selector:
     name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
-  type: NodePort
+  type: {{ .Values.nginx.service.type }}
   ports:
     - name: portus
-      port: {{ .Values.nginx.port }} 
-      nodePort: {{ .Values.nginx.externalPort }} 
+      port: {{ .Values.nginx.service.port }}
+  {{- if and (eq "NodePort" .Values.nginx.service.type) .Values.nginx.service.nodePort }}
+      nodePort: {{ .Values.nginx.service.nodePort }}
+  {{- end }}
