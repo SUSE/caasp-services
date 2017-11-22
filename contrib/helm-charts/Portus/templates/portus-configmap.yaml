@@ -8,7 +8,8 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  PORTUS_MACHINE_FQDN_VALUE: {{ .Values.portus.fqdnValue | quote }}
+
+  PORTUS_MACHINE_FQDN_VALUE: {{ .Values.nginx.fqdn | quote }}
   {{- if .Values.mariadb.enabled }}
   PORTUS_PRODUCTION_HOST: "{{ .Release.Name }}-mariadb"
   {{- else }}
@@ -18,8 +19,8 @@ data:
   PORTUS_PRODUCTION_USERNAME: {{ .Values.portus.productionUsername | quote }}
   PORTUS_KEY_PATH: "/certificates/portus.key"
   PORTUS_CERT_PATH: "/certificates/portus.crt"
-  PORTUS_CHECK_SSL_USAGE_ENABLED: "true" 
-  RAILS_SERVE_STATIC_FILES: {{ .Values.portus.railsServeStaticFiles | quote }} 
+  PORTUS_CHECK_SSL_USAGE_ENABLED: "true"
+  RAILS_SERVE_STATIC_FILES: {{ .Values.portus.railsServeStaticFiles | quote }}
   CRONO_INIT_COMMAND: "bin/crono"
 
   config: |
@@ -27,13 +28,13 @@ data:
     # application. In order to change them, write your own config-local.yml file
     # (it will be ignored by git). For more info, you can read the dedicated page
     # here: http://port.us.org/docs/Configuring-Portus.html.
-    
+
     # Settings for the Portus mailer.
     email:
       from: "portus@example.com"
       name: "Portus"
       reply_to: "no-reply@example.com"
-    
+
       # If enabled, then SMTP will be used. Otherwise 'sendmail' will be used
       # (defaults to: /usr/sbin/sendmail -i -t).
       smtp:
@@ -43,12 +44,12 @@ data:
         user_name: "username@example.com"
         password: "password"
         domain: "example.com"
-    
+
     # If enabled, then the profile picture will be picked from the Gravatar
     # associated with each user. See: https://en.gravatar.com/
     gravatar:
       enabled: true
-    
+
     # Allow admins and owners to delete images and tags. This feature should *only*
     # be enabled if the version of the running registry is 2.4 or higher since
     # it's the first version that supports garbage collection. That being said,
@@ -61,35 +62,35 @@ data:
     # http://port.us.org/features/removing_images.html
     delete:
       enabled: false
-    
+
     # LDAP support. If enabled, then only users of the specified LDAP server will
     # be able to use Portus. Take a look at the documentation of LDAP support in our
     # online docs: http://port.us.org/features/2_LDAP-support.html.
     ldap:
       enabled: false
-    
+
       hostname: "ldap_hostname"
       port: 389
-    
+
       # Available options: "plain", "simple_tls" and "starttls". The default is
       # "plain", the recommended is "starttls".
       method: "plain"
-    
+
       # The base where users are located (e.g. "ou=users,dc=example,dc=com").
       base: ""
-    
+
       # User filter (e.g. "mail=george*").
       filter: ""
-    
+
       # The LDAP attribute where to search for username. The default is 'uid'.
       uid: "uid"
-    
+
       # LDAP credentials used to search for a user.
       authentication:
         enabled: false
         bind_dn: ""
         password: ""
-    
+
       # Portus needs an email for each user, but there's no standard way to get
       # that from LDAP servers. You can tell Portus how to get the email from users
       # registered in the LDAP server with this configurable value. There are three
@@ -111,7 +112,7 @@ data:
       guess_email:
         enabled: false
         attr: ""
-    
+
     # OAuth support.
     oauth:
       # If enabled, users can authenticate with their Google Account.
@@ -127,7 +128,7 @@ data:
           # G Suite domain. If set, then only members of the domain can sign in/up.
           # If it's empty then any google users con sign in/up.
           hd: ""
-    
+
       # OpenID authentication support. If enabled, then users can authenticate with OpenID/Connect
       # Callback url: <host>/users/auth/open_id/callback
       open_id:
@@ -138,7 +139,7 @@ data:
         identifier: ""
         # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
         domain: ""
-    
+
       # Github authentication support.
       # Callback url: <host>/users/auth/github/callback
       github:
@@ -151,7 +152,7 @@ data:
         team: ""
          # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
         domain: ""
-    
+
       # Gitlab authentication support.
       # Callback url: <host>/users/auth/gitlab/callback
       gitlab:
@@ -164,7 +165,7 @@ data:
         domain: ""
         # The Gitlab server to be used. If empty, then https://gitlab.com is assumed.
         server: ""
-    
+
       # Bitbucket authentication support. Need permission to read email.
       # Callback url: <host>/users/auth/bitbucket/callback
       bitbucket:
@@ -177,7 +178,7 @@ data:
         options:
           # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
           team: ""
-    
+
     # Set first_user_admin to true if you want that the first user that signs up
     # to be an admin.
     #
@@ -186,7 +187,7 @@ data:
     # in order to set the admin user
     first_user_admin:
       enabled: true
-    
+
     # If enabled, then users can signup with the signup form. Otherwise, the admin
     # is responsible of creating new users by either:
     #   - Using the "portus:create_user" rake task.
@@ -195,11 +196,11 @@ data:
     # http://port.us.org/features/disabling_signup.html
     signup:
       enabled: true
-    
+
     # By default require ssl to be enabled when running on production
     check_ssl_usage:
-      enabled: true 
-    
+      enabled: true
+
     # Contains advanced options that tweak how Portus interacts with the
     # Registry. Don't touch any of these values unless you *really* know what you
     # are doing.
@@ -214,56 +215,56 @@ data:
       # See: https://github.com/SUSE/Portus/issues/510
       jwt_expiration_time:
         value: 5
-    
+
       # Set the pagination value for API calls that fetch data from the
       # registry. You can read more about pagination in the registry here:
       #   https://github.com/docker/distribution/blob/master/docs/spec/api.md#pagination
       catalog_page:
         value: 100
-    
+
       # Set the timeout in seconds for requests to the registry. Only change this
       # value if you are *really* sure that you have an exceptionally slow
       # connection to your private Docker registry.
       timeout:
         value: 2
-    
+
     # The FQDN of the machine where Portus is being deployed.
     machine_fqdn:
       value: "{{ .Values.portus.name }}"
-    
+
     # Allow users to have different display names on the web site. This will
     # **not** be the username used by `docker login`. It defaults to false because
     # it might confuse users that are not fully aware of it. You can read more about
     # it here: http://port.us.org/features/display_name.html
     display_name:
       enabled: false
-    
+
     user_permission:
       # Allow users to change the visibility or their personal namespace. If this is
       # disabled, only an admin will be able to change this. It defaults to true.
       change_visibility:
         enabled: true
-    
+
       # Allow users to create teams. If this is disabled only an admin will be able
       # to do this. This defaults to true.
       create_team:
         enabled: true
-    
+
       # Allow users to create/modify teams if they are an owner of it. If this is
       # disabled only an admin will be able to do this. This defaults to true.
       manage_team:
         enabled: true
-    
+
       # Allow users to create namespaces. If this is disabled, only an admin will
       # be able to do this. This defaults to true.
       create_namespace:
         enabled: true
-    
+
       # Allow users to create/modify namespaces if they are an owner of it. If this
       # is disabled, only an admin will be able to do this. This defaults to true.
       manage_namespace:
         enabled: true
-    
+
     # Security scanner support. Add the server location for each driver in order to
     # enable it. If no drivers have been enabled, then this feature is skipped
     # altogether. Enabling multiple drivers will simply aggregate the information
@@ -272,11 +273,11 @@ data:
       # CoreOS Clair support (https://github.com/coreos/clair).
       clair:
         server: "http://clair:6060"
-    
+
         # Port being used by Clair to report its status. Taking the default from
         # Clair.
         health_port: 6061
-    
+
       # zypper-docker can be run as a server with its `serve` command. This backend
       # fetches the information as given by zypper-docker. Note that this feature
       # from zypper-docker is experimental and only available through another branch
@@ -286,11 +287,11 @@ data:
       # been merged into master yet in zypper-docker.
       zypper:
         server: ""
-    
+
       # This backend is only used for testing purposes, don't use it.
       dummy:
         server: ""
-    
+
     # Allow anonymous (non-logged-in) users to explore the images available in your
     # Docker Registry. Only images on public namespaces will be shown.
     anonymous_browsing:

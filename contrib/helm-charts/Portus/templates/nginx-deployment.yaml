@@ -30,7 +30,7 @@ spec:
             - name: conf
               mountPath: /etc/nginx
           ports:
-            - containerPort: {{ .Values.nginx.port }} 
+            - containerPort: {{ .Values.nginx.service.port }}
       volumes:
         - name: certvol
           secret:
