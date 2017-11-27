@@ -159,49 +159,16 @@ nginx:
 
     ## Anntations to be added to the web ingress
     ##
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
-      kubernetes.io/ingress.allow-http: "false"
-      ingress.kubernetes.io/ssl-passthrough: "true"
-
-    port: "32123"
+    # annotations:
+    #   kubernetes.io/ingress.class: "nginx"
+    #   kubernetes.io/ingress.allow-http: "false"
+    #   ingress.kubernetes.io/ssl-passthrough: "true"
 
     ## TLS configuration
     ## Secrets must be manually created in the namespace
     ##
-    tls:
-      secretName: "portus-tls"
-
-  ## Domain name for entry point
-  ##
-  fqdn: "portus-test.us.to"
-
-  ## Service configuration.
-  ##
-  service:
-    ## If using Ingress use type ClusterIP, else use NodePort
-    ##
-    type: "NodePort"
-    port: "443"
-    nodePort: "32123"
-
-  ingress:
-    enabled: false
-
-    ## Anntations to be added to the web ingress
-    ##
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
-      kubernetes.io/ingress.allow-http: "false"
-      ingress.kubernetes.io/ssl-passthrough: "true"
-
-    port: "32123"
-
-    ## TLS configuration
-    ## Secrets must be manually created in the namespace
-    ##
-    tls:
-      secretName: "portus-tls"
+    # tls:
+    #   secretName: "portus-tls"
 
 ## Default values for Mariadb.
 ##
