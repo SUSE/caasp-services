@@ -5,15 +5,31 @@
 ## Default values for Portus
 ##
 portus:
-  name: "portus"
+  replicas: 1
+
+  ## Image configuration.
+  ##
   image:
     repository: "opensuse/portus"
     tag: "head"
     pullPolicy: "IfNotPresent"
-  replicas: 1
-  port: 3000
 
-  ## Configuration values for Portus.
+  ## Service configuration.
+  ##
+  service:
+    ## portus.key must include this name in hosts 
+    ##
+    name: "portus"
+    port: "3000"
+
+  ## Resource configuration.
+  ##
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "300m"
+
+  ## Portus database configuration.
   ##
   productionDatabase: "portus" # name of database
   productionUsername: "portus" # database user
@@ -22,8 +38,6 @@ portus:
   ##
   # productionHost:
   # productionPassword:
-
-  railsServeStaticFiles: true 
 
   ## Defaults to a random 10-character alphanumeric string if not set
   ##
@@ -108,52 +122,92 @@ portus:
 ## Default values for Crono. 
 ##
 crono:
-  name: "crono"
+  ## image configuration.
+  ##
   image:
     repository: "opensuse/portus"
     tag: "head"
     pullPolicy: "IfNotPresent"
+
+  ## Resource configuration.
+  ##
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "300m"
+
   replicas: 1
 
 ## Default values for Docker Registry.
 ##
 registry:
-  name: "registry"
+  replicas: 1
   mountPath: "/storage"
+
+  ## persistence configuration.
+  ##
   persistence:
-    enabled: true
+    enabled: false # true
     accessMode: "ReadWriteOnce"
-    capacity: "10Gi"
+    size: "10Gi"
+
+  ## image configuration.
+  ##
   image:
     repository: "library/registry"
     tag: "latest"
     pullPolicy: "IfNotPresent"
-  replicas: 1
-  port: "5000"
-  debugPort: "5001"
+
+  ## Service configuration.
+  ##
+  service:
+    ## portus.key must include this name in hosts 
+    ##
+    name: "registry"
+    port: "5000"
+    debugPort: "5001"
+
+  ## Resource configuration.
+  ##
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "300m"
 
 ## Default values for Nginx.
 ##
 nginx:
-  name: "nginx"
+  replicas: 1
+
+  ## image configuration.
+  ##
   image:
     repository: "library/nginx"
     tag: "alpine"
     pullPolicy: "IfNotPresent"
 
-  ## Domain name for entry point
+  ## host must be set if ingress is not being used 
   ##
-  fqdn: "portus-test.us.to"
+  host: "portus-test.us.to"
 
   ## Service configuration.
   ##
   service:
-    ## If using Ingress use type ClusterIP, else use NodePort
+    ## portus.key must include this name in hosts 
     ##
-    type: "NodePort"
-    port: "443"
-    nodePort: "32123"
+    name: "nginx"
 
+    ## Set to ClusterIP if using ingress, or NodePort if using minikube 
+    ##
+    type: "LoadBalancer"
+
+    ## nodePort must be set if not using ingress
+    ##
+    nodePort: "32123"
+    port: "443"
+
+  ## ingress configuration.
+  ##
   ingress:
     enabled: false
 
@@ -164,11 +218,22 @@ nginx:
     #   kubernetes.io/ingress.allow-http: "false"
     #   ingress.kubernetes.io/ssl-passthrough: "true"
 
+    ## hostname must be provided if ingress is enabled
+    ##
+    # host: "portus-test.us.to
+
     ## TLS configuration
     ## Secrets must be manually created in the namespace
     ##
     # tls:
     #   secretName: "portus-tls"
+
+  ## Resource configuration.
+  ##
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "300m"
 
 ## Default values for Mariadb.
 ##
@@ -178,6 +243,8 @@ mariadb:
   ##
   enabled: true
 
+  ## persistence configuration.
+  ##
   persistence:
     enabled: false
     accessMode: "ReadWriteOnce"

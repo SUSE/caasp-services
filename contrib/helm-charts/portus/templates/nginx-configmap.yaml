@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+  name: {{ template "nginx.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -42,19 +42,19 @@ data:
         '' 'registry/2.0';
       }
 
-      upstream {{ .Values.portus.name }} {
+      upstream {{ .Values.portus.service.name }} {
         least_conn;
-        server {{ .Values.portus.name }}:{{ .Values.portus.port }} max_fails=3 fail_timeout=15s;
+        server {{ .Values.portus.service.name }}:{{ .Values.portus.service.port }} max_fails=3 fail_timeout=15s;
       }
 
-      upstream {{ .Values.registry.name }}:{{ .Values.registry.port }} {
+      upstream {{ .Values.registry.service.name }}:{{ .Values.registry.service.port }} {
         least_conn;
-        server {{ .Values.registry.name }}:{{ .Values.registry.port }} max_fails=3 fail_timeout=15s;
+        server {{ .Values.registry.service.name }}:{{ .Values.registry.service.port }} max_fails=3 fail_timeout=15s;
       }
 
       server {
         listen {{ .Values.nginx.service.port }} ssl http2;
-        server_name "{{ .Values.nginx.name }}"
+        server_name "{{ .Values.nginx.service.name }}"
         # root /srv/Portus/public;
 
         ##
@@ -141,7 +141,7 @@ data:
           ## See the map directive above where this variable is defined.
           add_header 'Docker-Distribution-Api-Version' $docker_distribution_api_version always;
 
-          proxy_pass https://{{ .Values.registry.name }}:{{ .Values.registry.port }};
+          proxy_pass https://{{ .Values.registry.service.name }}:{{ .Values.registry.service.port }};
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -152,7 +152,7 @@ data:
 
         # Portus needs to handle /v2/token for authentication
         location = /v2/token {
-          proxy_pass https://{{ .Values.portus.name }};
+          proxy_pass https://{{ .Values.portus.service.name }};
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -163,7 +163,7 @@ data:
 
         # Portus needs to handle /v2/webhooks/events for notifications
         location = /v2/webhooks/events {
-          proxy_pass https://{{ .Values.portus.name }};
+          proxy_pass https://{{ .Values.portus.service.name }};
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -177,8 +177,8 @@ data:
           try_files $uri/index.html $uri.html $uri @portus;
         }
 
-        location @{{ .Values.portus.name }} {
-          proxy_pass https://{{ .Values.portus.name }};
+        location @{{ .Values.portus.service.name }} {
+          proxy_pass https://{{ .Values.portus.service.name }};
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

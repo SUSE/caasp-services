@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "registry.fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  {{- if .Values.nginx.ingress.enabled }}
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.ingress.host }}:{{ .Values.nginx.service.port }}/v2/token"
+  {{- else if .Values.nginx.service.nodePort }}
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.host }}:{{ .Values.nginx.service.nodePort }}/v2/token"
+  {{- else }}
+  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.host }}:{{ .Values.nginx.service.port }}/v2/token"
+  {{- end }} 
+ 
+  REGISTRY_AUTH_TOKEN_SERVICE: "{{ .Values.registry.service.name }}:{{ .Values.registry.service.port }}"
+  REGISTRY_AUTH_TOKEN_ISSUER: {{ .Values.portus.service.name | quote }} 
+  REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
+  REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
+  REGISTRY_HTTP_TLS_KEY: "/certificates/portus.key"
+  REGISTRY_NOTIFICATIONS_ENDPOINTS: >
+    - name: {{ .Values.nginx.service.name }} 
+      url: https://{{ .Values.nginx.service.name }}/v2/webhooks/events
+      timeout: 2000ms
+      threshold: 5
+      backoff: 1s
+  config: |
+    version: 0.1
+    storage:
+      filesystem:
+        rootdirectory: {{ .Values.registry.mountPath }}
+      delete:
+        enabled: true
+    http:
+      addr: 0.0.0.0:{{ .Values.registry.service.port }}
+      debug:
+        addr: 0.0.0.0:{{ .Values.registry.service.debugPort }}

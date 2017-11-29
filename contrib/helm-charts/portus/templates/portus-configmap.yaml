@@ -1,14 +1,14 @@
 a-piVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+  name: {{ template "portus.fullname" . }} 
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  PORTUS_MACHINE_FQDN_VALUE: {{ .Values.nginx.fqdn | quote }}
+  PORTUS_MACHINE_FQDN_VALUE: {{ .Values.portus.service.name }}
 
   {{- if .Values.mariadb.enabled }}
   PORTUS_PRODUCTION_HOST: {{ template "mariadb.fullname" . }}
@@ -21,7 +21,7 @@ data:
   PORTUS_KEY_PATH: "/certificates/portus.key"
   PORTUS_CERT_PATH: "/certificates/portus.crt"
   PORTUS_CHECK_SSL_USAGE_ENABLED: "true"
-  RAILS_SERVE_STATIC_FILES: {{ .Values.portus.railsServeStaticFiles | quote }}
+  RAILS_SERVE_STATIC_FILES: "true" 
   CRONO_INIT_COMMAND: "bin/crono"
 
   config: |
@@ -231,7 +231,7 @@ data:
 
     # The FQDN of the machine where Portus is being deployed.
     machine_fqdn:
-      value: "{{ .Values.portus.name }}"
+      value: "{{ .Values.portus.service.name }}"
 
     # Allow users to have different display names on the web site. This will
     # **not** be the username used by `docker login`. It defaults to false because

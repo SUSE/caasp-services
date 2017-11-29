@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.nginx.name }}" 
+  name: {{ template "nginx.fullname" . }} 
   labels:
-    name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+    name: {{ template "nginx.fullname" . }}
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name }}
@@ -12,17 +12,19 @@ spec:
   replicas: {{ .Values.nginx.replicas }} 
   selector:
     matchLabels:
-      name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+      name: {{ template "nginx.fullname" . }}
   template:
     metadata:
       labels:
-        name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+        name: {{ template "nginx.fullname" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+        - name: {{ template "nginx.fullname" . }}
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}" 
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }} 
+          resources:
+{{ toYaml .Values.nginx.resources | indent 12 }}
           volumeMounts:
             - name: certvol
               mountPath: /certificates
@@ -34,7 +36,7 @@ spec:
       volumes:
         - name: certvol
           secret:
-            secretName: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+            secretName: {{ template "portus.fullname" . }}
             items:
             - key: key
               path: portus.key
@@ -42,7 +44,7 @@ spec:
               path: portus.crt
         - name: conf
           configMap:
-            name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+            name: {{ template "nginx.fullname" . }}
             items:
             - key: conf
               path: nginx.conf
