@@ -122,6 +122,8 @@ portus:
 ## Default values for Crono. 
 ##
 crono:
+  replicas: 1
+
   ## image configuration.
   ##
   image:
@@ -135,8 +137,6 @@ crono:
     requests:
       memory: "512Mi"
       cpu: "300m"
-
-  replicas: 1
 
 ## Default values for Docker Registry.
 ##
@@ -199,12 +199,10 @@ nginx:
 
     ## Set to ClusterIP if using ingress, or NodePort if using minikube 
     ##
-    type: "LoadBalancer"
+    type: "NodePort"
 
-    ## nodePort must be set if not using ingress
-    ##
-    nodePort: "32123"
     port: "443"
+    nodePort: "32123"
 
   ## ingress configuration.
   ##

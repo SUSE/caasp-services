@@ -1,1 +1,65 @@
-TODO: add deployment notes
+1. Get the Portus URL:
+
+{{- if .Values.nginx.ingress.enabled }}
+
+  You should be able to access Portus, and the private Docker registry through:
+    https://{{- .Values.nginx.ingress.host }}:{{- .Values.nginx.service.port }}
+
+{{- else if eq "LoadBalancer" .Values.nginx.service.type }}
+
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        Watch the status with: 'kubectl get svc --namespace {{ .Release.Namespace }} -w {{ template "nginx.fullname" . }}'
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.nginx.service.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+  You should be able to access Portus, and the private Docker registry through:
+    echo https://$SERVICE_IP:{{ .Values.nginx.service.port }}
+
+{{- else if and (eq "NodePort" .Values.nginx.service.type) .Values.nginx.service.nodePort }}
+
+  You should be able to access Portus, and the private Docker registry through:
+    https://{{- .Values.nginx.host }}:{{- .Values.nginx.service.nodePort }}
+
+{{- else }}
+
+  Portus is not accessible from outside of the cluster, with the current settings. Use an ingress controller, loadbalancer or node port to access the deployed nginx proxy.
+
+{{- end }}
+
+2. Create admin user account:
+
+  You will be prompted to create an account before you can use Portus.
+
+  Fill in whatever credentials you would like here.
+
+3. Associate Portus with the private Docker registry:
+
+  After creating an admin account you will need to associate Portus with the installed instance of the Docker registry.
+
+  You can give the registry whatever name you would like, but must fill out the rest of the credentials according to these instructions.
+
+  Hostname:
+    {{ .Values.registry.service.name }}:{{ .Values.registry.service.port }}
+
+  Check "Use SSL"
+
+  Click the button "Show Advanced"
+
+{{- if .Values.nginx.ingress.enabled }}
+
+  External Registry Name:
+    https://{{ .Values.ingress.nginx.host }}:{{ .Values.nginx.service.port }}
+
+{{- else if eq "LoadBalancer" .Values.nginx.service.type }}
+
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.nginx.service.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
+  External Registry Name:
+    echo https://$SERVICE_IP:{{ .Values.nginx.service.port }}
+
+{{- else if and (eq "NodePort" .Values.nginx.service.type) .Values.nginx.service.nodePort }}
+
+  External Registry Name:
+    https://{{ .Values.nginx.host }}:{{ .Values.nginx.service.nodePort }}
+
+{{- end }}
