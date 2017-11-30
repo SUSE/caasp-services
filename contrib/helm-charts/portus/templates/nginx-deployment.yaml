@@ -26,14 +26,17 @@ spec:
           resources:
 {{ toYaml .Values.nginx.resources | indent 12 }}
           volumeMounts:
+            {{- if .Values.portus.tls.enabled }}
             - name: certvol
               mountPath: /certificates
               readOnly: true
+            {{- end }}
             - name: conf
               mountPath: /etc/nginx
           ports:
             - containerPort: {{ .Values.nginx.service.port }}
       volumes:
+        {{- if .Values.portus.tls.enabled }}
         - name: certvol
           secret:
             secretName: {{ template "portus.fullname" . }}
@@ -42,6 +45,7 @@ spec:
               path: portus.key
             - key: cert
               path: portus.crt
+        {{- end }}
         - name: conf
           configMap:
             name: {{ template "nginx.fullname" . }}

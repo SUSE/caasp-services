@@ -17,9 +17,6 @@ portus:
   ## Service configuration.
   ##
   service:
-    ## portus.key must include this name in hosts 
-    ##
-    name: "portus"
     port: "3000"
 
   ## Resource configuration.
@@ -47,77 +44,19 @@ portus:
   ##
   # secretKeyBase:
 
-  key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    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
-    -----END RSA PRIVATE KEY-----
+  ## TLS configuration
+  ## the internal host names of the portus, registry and nginx service must be covered by the key/cert in order for TLS to work properly
+  ##
+  tls:
+    enabled: false
 
-  cert: |-
-    -----BEGIN CERTIFICATE-----
-    MIIE4zCCA0ugAwIBAgIJAJSl34+OjmiEMA0GCSqGSIb3DQEBCwUAME4xCzAJBgNV
-    BAYTAlVTMQswCQYDVQQIDAJXQTENMAsGA1UEBwwEU1VTRTEQMA4GA1UECgwHU2Vh
-    dHRsZTERMA8GA1UEAwwIKi5uaXAuaW8wHhcNMTcxMDI0MTgyODA0WhcNNDUwMzEw
-    MTgyODA0WjBOMQswCQYDVQQGEwJVUzELMAkGA1UECAwCV0ExDTALBgNVBAcMBFNV
-    U0UxEDAOBgNVBAoMB1NlYXR0bGUxETAPBgNVBAMMCCoubmlwLmlvMIIBojANBgkq
-    hkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAzTYgW7iI9Cz/PjjanVz3Uxze4XoYSqNi
-    eeiFWrpi53hIG5oyKms2sTcAz4JnJXkoAQxrhj4xzgogB4gfnELr7MnP8XbhrW8X
-    7lSMnWMp1dDQlodvRCXfmUlJiiMTRV/p4EARC89QL625dxZkSnvfRsoYOofujyBy
-    BhN8vTgCw2xUah31/TOZR7gb74YuiiLYatR+HT0dyL57L6kaySkikBw92qTsrw68
-    WGQjg+ODeJkngoFYh+mOLMjA/bjU3eP5SiKgrRC461IjRpLhkrh4B7Nxe8VZwHmZ
-    e9iYtDXX6Fedwlvp+rY7ki6/sapDP1Io3xwC0UYb8AXUYquRr1/Nbq0ywPIPl/Hz
-    LPrxOqId5nhURlM64eh5Si+PPNVveDWe82JWkTtrg4seT0kESUkpj0dj2om8DcPx
-    +8MYMCo7SKZIvb8SBQ3HjDVpeHUT8NqysauQpVjAiZZa9Cf3c3oizrxNJTKavQuN
-    rT+5NioOFfOd4HKV9aB9SM8n6877uJoLAgMBAAGjgcMwgcAwHQYDVR0OBBYEFLbL
-    vHYijLO8FG3NsJ3GLNrxR/kdMB8GA1UdIwQYMBaAFLbLvHYijLO8FG3NsJ3GLNrx
-    R/kdMAwGA1UdEwQFMAMBAf8wCwYDVR0PBAQDAgGmMGMGA1UdEQRcMFqCByoudXMu
-    dG+CDCouZHluZG5zLm9yZ4IIKi5uaXAuaW+CBnBvcnR1c4IIcmVnaXN0cnmCBW5n
-    aW54gh5uZ2lueC5wb3J0dXMuc3ZjLmNsdXN0ZXIubG9jYWwwDQYJKoZIhvcNAQEL
-    BQADggGBABeFsmsVHS9Ec+h2SPjhZCUPm53leXq7iJj9SPPT1gQFgIgq3ID1FbsW
-    4mBt20PFqAFJjUPlz/buPJOHAWOo0wuNQ70o7/Kj5LVueL0ZGzdUGPlwP2avFz/p
-    HRgeeiZROg+OL0kaFfU0ShKZI+HF845tTR9KdozSr1FQi00jkZH1YSmMquddEAjS
-    GsJUlggI3PeLpFAdli5P0VdF1UTcLt91Aa8iv662lGsHZrDGYs8Mkw6OrCMmibvL
-    1FNpIHwwQDGMX+YKKvJ0xQ0HllXQXjWazvd9B3XDipJvu/bQd5Ie6IQFCkkJXO3K
-    Tdol9x0HMYNEol9u0b3h+r33HS0LIbLmBtjGYZOSWhL/0wozwdcGPNCrRDcN0ndf
-    Fa5DYK1d8dIztqMev3ASE20vMvCjMrDF5g9qiIf0nxE15Qb2Ixm84ncgm+YU83st
-    MFBVD7A780nViJrjlyL8yVVp5wS+psYbqmTjkGkkPBGDuzdPBOrawRfpo3Y1F5mU
-    mrzr4NRwWQ==
-    -----END CERTIFICATE-----
+  ## must include key if using tls
+  ##
+  # key: |
+
+  ## must include certificate if using tls
+  ##
+  # cert: |
  
 ## Default values for Crono. 
 ##
@@ -161,9 +100,6 @@ registry:
   ## Service configuration.
   ##
   service:
-    ## portus.key must include this name in hosts 
-    ##
-    name: "registry"
     port: "5000"
     debugPort: "5001"
 
@@ -186,23 +122,22 @@ nginx:
     tag: "alpine"
     pullPolicy: "IfNotPresent"
 
-  ## host must be set if ingress is not being used 
-  ##
-  host: "portus-test.us.to"
-
   ## Service configuration.
   ##
   service:
-    ## portus.key must include this name in hosts 
-    ##
-    name: "nginx"
-
     ## Set to ClusterIP if using ingress, or NodePort if using minikube 
     ##
     type: "NodePort"
 
-    port: "443"
+    port: "80"
     nodePort: "32123"
+
+  ## in order to access the docker registry from outside of the cluster
+  ## if ingress is enabled set host to the domain you are using
+  ## if LoadBalancer is being used set host to the LoadBalancer name
+  ## if NodePort is being used set host to the ip address of a cluster node
+  ##
+  host: "portus-test.us.to"
 
   ## ingress configuration.
   ##
@@ -213,18 +148,20 @@ nginx:
     ##
     # annotations:
     #   kubernetes.io/ingress.class: "nginx"
+
+    # SHOULD I REMOVE?
     #   kubernetes.io/ingress.allow-http: "false"
     #   ingress.kubernetes.io/ssl-passthrough: "true"
 
-    ## hostname must be provided if ingress is enabled
-    ##
-    # host: "portus-test.us.to
-
     ## TLS configuration
-    ## Secrets must be manually created in the namespace
+    ## the ingress host must be covered by the key/cert in order for TLS to work properly
     ##
     # tls:
-    #   secretName: "portus-tls"
+      # enabled: false
+
+      ## Secrets containing SSL key and cert must be manually created in the namespace
+      ##
+      # secretName: "portus-tls"
 
   ## Resource configuration.
   ##

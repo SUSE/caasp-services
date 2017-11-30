@@ -3,7 +3,7 @@
 {{- if .Values.nginx.ingress.enabled }}
 
   You should be able to access Portus, and the private Docker registry through:
-    https://{{- .Values.nginx.ingress.host }}:{{- .Values.nginx.service.port }}
+    http://{{- .Values.nginx.ingress.host }}:{{- .Values.nginx.service.port }}
 
 {{- else if eq "LoadBalancer" .Values.nginx.service.type }}
 
@@ -13,12 +13,12 @@
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ .Values.nginx.service.name }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
   You should be able to access Portus, and the private Docker registry through:
-    echo https://$SERVICE_IP:{{ .Values.nginx.service.port }}
+    echo http://$SERVICE_IP:{{ .Values.nginx.service.port }}
 
 {{- else if and (eq "NodePort" .Values.nginx.service.type) .Values.nginx.service.nodePort }}
 
   You should be able to access Portus, and the private Docker registry through:
-    https://{{- .Values.nginx.host }}:{{- .Values.nginx.service.nodePort }}
+    http://{{- .Values.nginx.host }}:{{- .Values.nginx.service.nodePort }}
 
 {{- else }}
 

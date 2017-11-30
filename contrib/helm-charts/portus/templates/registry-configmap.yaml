@@ -8,22 +8,25 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  {{- if .Values.nginx.ingress.enabled }}
-  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.ingress.host }}:{{ .Values.nginx.service.port }}/v2/token"
-  {{- else if .Values.nginx.service.nodePort }}
-  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.host }}:{{ .Values.nginx.service.nodePort }}/v2/token"
-  {{- else }}
-  REGISTRY_AUTH_TOKEN_REALM: "https://{{ .Values.nginx.host }}:{{ .Values.nginx.service.port }}/v2/token"
-  {{- end }} 
- 
-  REGISTRY_AUTH_TOKEN_SERVICE: "{{ .Values.registry.service.name }}:{{ .Values.registry.service.port }}"
+  {{- if .Values.portus.tls.enabled }}
+  REGISTRY_AUTH_TOKEN_REALM: {{ printf "https://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (.Values.nginx.service.nodePort | default .Values.nginx.port) | quote }} 
+  REGISTRY_AUTH_TOKEN_SERVICE: {{ printf "%s:%s" (include "registry.fullname" .) .Values.registry.service.port | quote }}
   REGISTRY_AUTH_TOKEN_ISSUER: {{ .Values.portus.service.name | quote }} 
-  REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
-  REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
   REGISTRY_HTTP_TLS_KEY: "/certificates/portus.key"
+  REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
+  REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
+  {{- else }}
+  REGISTRY_AUTH_SILLY_REALM: {{ printf "http://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (.Values.nginx.service.nodePort | default .Values.nginx.port) | quote }} 
+  REGISTRY_AUTH_SILLY_SERVICE: {{ printf "%s:%s" (include "registry.fullname" .) .Values.registry.service.port | quote }}
+  {{- end }}
+
   REGISTRY_NOTIFICATIONS_ENDPOINTS: >
-    - name: {{ .Values.nginx.service.name }} 
-      url: https://{{ .Values.nginx.service.name }}/v2/webhooks/events
+    - name: nginx
+      {{- if .Values.portus.tls.enabled }}
+      url: https://{{ template "nginx.fullname" . }}/v2/webhooks/events
+      {{- else }}
+      url: http://{{ template "nginx.fullname" . }}/v2/webhooks/events
+      {{- end }}
       timeout: 2000ms
       threshold: 5
       backoff: 1s

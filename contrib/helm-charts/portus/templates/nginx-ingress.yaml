@@ -18,10 +18,12 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: {{ .Values.nginx.service.name }} 
+              serviceName: {{ template "nginx.fullname" . }}
               servicePort: {{ .Values.nginx.service.port }}
+  {{- if .Values.nginx.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.nginx.ingress.tls.secretName | quote }}
       hosts:
         - {{ .Values.nginx.ingress.host | quote }}
+  {{- end }}
 {{- end }}

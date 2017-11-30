@@ -23,6 +23,10 @@ spec:
         - name: {{ template "crono.fullname" . }} 
           image: "{{ .Values.crono.image.repository }}:{{ .Values.crono.image.tag }}"
           imagePullPolicy: {{ .Values.crono.image.pullPolicy }}
+          {{- if eq false .Values.portus.tls.enabled }}
+          command: ["/bin/bash"]
+          args: ["-c", "openssl genrsa -out /certificates/portus.key 3072;/init"]
+          {{- end }}
           env:
             - name: PORTUS_INIT_COMMAND
               valueFrom:
@@ -72,11 +76,23 @@ spec:
                 configMapKeyRef: 
                   name: {{ template "portus.fullname" . }}  
                   key: PORTUS_KEY_PATH
+            {{- if .Values.portus.tls.enabled }}
             - name: PORTUS_CERT_PATH
               valueFrom:
                 configMapKeyRef: 
                   name: {{ template "portus.fullname" . }}  
                   key: PORTUS_CERT_PATH
+            - name: PORTUS_PUMA_TLS_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "portus.fullname" . }}
+                  key: PORTUS_KEY_PATH
+            - name: PORTUS_PUMA_TLS_CERT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "portus.fullname" . }}
+                  key: PORTUS_CERT_PATH
+            {{- end }}
             - name: PORTUS_SECRET_KEY_BASE
               valueFrom:
                 secretKeyRef: 
@@ -92,20 +108,18 @@ spec:
                 configMapKeyRef: 
                   name: {{ template "portus.fullname" . }}  
                   key: PORTUS_MACHINE_FQDN_VALUE
-            - name: PORTUS_PUMA_TLS_KEY
-              valueFrom:
-                configMapKeyRef: 
-                  name: {{ template "portus.fullname" . }}  
-                  key: PORTUS_KEY_PATH
-            - name: PORTUS_PUMA_TLS_CERT
-              valueFrom:
-                configMapKeyRef: 
-                  name: {{ template "portus.fullname" . }}  
-                  key: PORTUS_CERT_PATH
           resources:
 {{ toYaml .Values.crono.resources | indent 12 }}
+          volumeMounts:
+            - name: certvol
+              mountPath: /certificates
+            - name: config
+              mountPath: /srv/Portus/config/config.yml
+              subPath: etc/config.yml
+              readOnly: true
       volumes:
         - name: certvol
+          {{- if .Values.portus.tls.enabled }}
           secret:
             secretName: {{ template "portus.fullname" . }}
             items:
@@ -113,6 +127,9 @@ spec:
                 path: portus.key
               - key: cert
                 path: portus.crt
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
         - name: config
           configMap:
             name: {{ template "portus.fullname" . }}
