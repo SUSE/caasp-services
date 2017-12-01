@@ -127,7 +127,7 @@ nginx:
   service:
     ## Set to ClusterIP if using ingress, or NodePort if using minikube 
     ##
-    type: "NodePort"
+    type: "LoadBalancer"
 
     port: "80"
     nodePort: "32123"
