@@ -11,7 +11,7 @@ portus:
   ##
   image:
     repository: "opensuse/portus"
-    tag: "2.1"
+    tag: "head"
     pullPolicy: "IfNotPresent"
 
   ## Service configuration.
@@ -67,7 +67,7 @@ crono:
   ##
   image:
     repository: "opensuse/portus"
-    tag: "2.1"
+    tag: "head"
     pullPolicy: "IfNotPresent"
 
   ## Resource configuration.
@@ -91,7 +91,7 @@ registry:
     size: "10Gi"
 
   ## image configuration.
-  ##
+  # #
   image:
     repository: "library/registry"
     tag: "2.5.2"
@@ -130,7 +130,7 @@ nginx:
     type: "LoadBalancer"
 
     port: "80"
-    nodePort: "32123"
+    # nodePort:
 
   ## in order to access the docker registry from outside of the cluster
   ## if ingress is enabled set host to the domain you are using

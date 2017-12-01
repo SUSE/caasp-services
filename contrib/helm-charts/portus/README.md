@@ -1,6 +1,7 @@
 # Portus
 
-[Portus](http://port.us.org/) Portus is an open source authorization service and user interface for the next generation Docker Registry.
+[Portus](http://port.us.org/) Portus is an open source authorization service and user interface for the next generation
+Docker Registry.
 
 ## TL;DR;
 
@@ -10,9 +11,11 @@ $ helm install incubator/portus
 
 ## Introduction
 
-This chart bootstraps a [Portus](http://port.us.org/) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Portus](http://port.us.org/) deployment on a [Kubernetes](http://kubernetes.io) cluster using
+the [Helm](https://helm.sh) package manager.
 
-It also packages the [Bitnami MariaDB chart](https://github.com/kubernetes/charts/tree/master/stable/mariadb) which is required for bootstrapping a MariaDB deployment for the database requirements of the Portus application.
+It also packages the [Bitnami MariaDB chart](https://github.com/kubernetes/charts/tree/master/stable/mariadb) which is
+required for bootstrapping a MariaDB deployment for the database requirements of the Portus application.
 
 ## Prerequisites
 
@@ -40,15 +43,16 @@ chart and deletes the release.
 
 ## Portus TLS
 
-To run Portus securely you'll need an SSL key and certificate that cover the domain names portus, docker registry and nginx services. This chart does not use TLS by default, but it does support a TLS installation.
+To run Portus securely you'll need an SSL key and certificate that cover the domain names that the Portus,
+Docker registry and Nginx services use. This chart does not use TLS by default, but it does support a TLS
+installation.
 
 To use TLS you must set `portus.tls.enabled` to true.
 
-You so will need to generate an appropriate key and certificate if you would like to install the chart securely. The Portus, Docker registry and Nginx services must all be covered by the TLS credentials.
+You will need to generate an appropriate key and certificate if you would like to install the chart securely.
 
-If you would like to enable TLS for the Portus installation you will need to store your key in the value `portus.tls.key` and the certificate in the value `portus.tls.cert`
-
-And update the `values.yaml` file with the generated keys:
+If you would like to enable TLS for the Portus installation you will need to store your key in the value
+`portus.tls.key` and the certificate in the value `portus.tls.cert`
 
 ## Configuration
 
@@ -118,7 +122,8 @@ $ helm install --name my-release --set portus.replicas=2 incubator/portus
 
 The above command will install Portus with a deployment set up to use two replicas.
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
+Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the
+chart. For example,
 
 ```console
 $ helm install --name my-release -f values.yaml incubator/portus
@@ -128,43 +133,48 @@ $ helm install --name my-release -f values.yaml incubator/portus
 
 ## Persistence
 
-The [Docker Registry](https://hub.docker.com/_/registry/) image stores the image data at the `.Values.registry.persistence.storagePath` path of the container.
+The [Docker Registry](https://hub.docker.com/_/registry/) image stores the image data at the
+`.Values.registry.persistence.storagePath` path of the container.
 
-Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
-See the [Configuration](#configuration) section to configure the PVC or to disable persistence.
+Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and
+minikube. See the [Configuration](#configuration) section to configure the PVC or to disable persistence.
 
 ## Ingress
 
-This chart provides support for ingress resources. If you have an
-ingress controller installed on your cluster, such as [nginx-ingress](https://kubeapps.com/charts/stable/nginx-ingress)
-or [traefik](https://kubeapps.com/charts/stable/traefik) you can utilize
-the ingress controller to service your Portus application.
+This chart provides support for ingress resources. If you have an ingress controller installed on your cluster,
+such as [nginx-ingress](https://kubeapps.com/charts/stable/nginx-ingress) or [traefik](https://kubeapps.com/charts/stable/traefik)
+you can utilize the ingress controller to service your Portus application.
 
-To enable ingress set `portus.ingress.enabled` to `true`.
+To enable ingress set `nginx.ingress.enabled` to `true`.
 
 ### Host
-The host set in `portus.ingress.host` will be set as the host associated with the nginx proxy, which is the
+The host set in `nginx.ingress.host` will be set as the host associated with the nginx proxy, which is the
 entrypoint into both the Portus application, and the Docker registry.
 
 ### Annotations
-For annotations, please see [this document](https://github.com/kubernetes/ingress-nginx/blob/master/docs/annotations.md).
-Not all annotations are supported by all ingress controllers, but this
-document does a good job of indicating which annotation is supported by
-many popular ingress controllers.
+For annotations, please see
+[this document](https://github.com/kubernetes/ingress-nginx/blob/master/docs/annotations.md).
+Not all annotations are supported by all ingress controllers, but this document does a good job of
+indicating which annotation is supported by many popular ingress controllers.
 
 ### TLS Secrets
-If your cluster allows automatic creation/retrieval of TLS certificates (e.g. [kube-lego](https://github.com/jetstack/kube-lego)), please refer to the documentation for that mechanism.
+If your cluster allows automatic creation/retrieval of TLS certificates
+(e.g. [kube-lego](https://github.com/jetstack/kube-lego)), please refer to the documentation for
+that mechanism.
 
-To manually configure TLS, first create/retrieve a key & certificate pair for the address you wish to protect. Then create a TLS secret in the namespace:
+To manually configure TLS for ingress, first create/retrieve a key & certificate pair for the address you
+wish to protect. Then create a TLS secret in the namespace:
 
 ```console
 kubectl create secret tls portus-tls --cert=path/to/tls.cert --key=path/to/tls.key
 ```
 
-Include the secret's name, along with the desired hostnames, in the `nginx.ingress.tls` section of your custom `values.yaml` file.
+Include the secret's name, along with the desired hostnames, in the `nginx.ingress.tls`
+section of your custom `values.yaml` file.
 
 ## MariaDB
 
-By default, this chart will use a MariaDB database deployed as a chart dependency. You can also bring your own MariaDB. To do so
-set `mariadb.enabled` to `false`, and set `portus.productionHost` to the address of the host providing the MariaDB that you
-would like to use, and `portus.productionPassword` to the password of the database you would like to use.
+By default, this chart will use a MariaDB database deployed as a chart dependency. You can
+also bring your own MariaDB. To do so set `mariadb.enabled` to `false`, and set
+`portus.productionHost` to the address of the host providing the MariaDB that you would like
+to use, and `portus.productionPassword` to the password of the database you would like to use.
