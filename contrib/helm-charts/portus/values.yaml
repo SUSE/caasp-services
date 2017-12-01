@@ -57,7 +57,7 @@ portus:
     ## must include certificate if using tls
     ##
     # cert:
- 
+
 ## Default values for Crono. 
 ##
 crono:
@@ -86,7 +86,7 @@ registry:
   ## persistence configuration.
   ##
   persistence:
-    enabled: false # true
+    enabled: true
     accessMode: "ReadWriteOnce"
     size: "10Gi"
 
@@ -134,7 +134,6 @@ nginx:
 
   ## in order to access the docker registry from outside of the cluster
   ## if ingress is enabled set host to the domain you are using
-  ## if LoadBalancer is being used set host to the LoadBalancer name
   ## if NodePort is being used set host to the ip address of a cluster node
   ##
   # host:

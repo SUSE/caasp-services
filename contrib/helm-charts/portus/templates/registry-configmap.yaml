@@ -11,7 +11,7 @@ data:
   {{- if .Values.portus.tls.enabled }}
   REGISTRY_AUTH_TOKEN_REALM: {{ printf "https://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) .Values.nginx.port | quote }}
   REGISTRY_AUTH_TOKEN_SERVICE: {{ printf "%s:%s" (include "registry.fullname" .) .Values.registry.service.port | quote }}
-  REGISTRY_AUTH_TOKEN_ISSUER: {{ .Values.portus.service.name | quote }} 
+  REGISTRY_AUTH_TOKEN_ISSUER: {{ template "portus.fullname" . }}
   REGISTRY_HTTP_TLS_KEY: "/certificates/portus.key"
   REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
   REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
