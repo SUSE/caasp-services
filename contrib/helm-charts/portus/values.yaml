@@ -52,11 +52,11 @@ portus:
 
     ## must include key if using tls
     ##
-    # key: |
+    # key:
 
     ## must include certificate if using tls
     ##
-    # cert: |
+    # cert:
  
 ## Default values for Crono. 
 ##
@@ -148,8 +148,6 @@ nginx:
     ##
     # annotations:
     #   kubernetes.io/ingress.class: "nginx"
-
-    # SHOULD I REMOVE?
     #   kubernetes.io/ingress.allow-http: "false"
     #   ingress.kubernetes.io/ssl-passthrough: "true"
 
