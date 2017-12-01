@@ -137,7 +137,7 @@ nginx:
   ## if LoadBalancer is being used set host to the LoadBalancer name
   ## if NodePort is being used set host to the ip address of a cluster node
   ##
-  host: "portus-test.us.to"
+  # host:
 
   ## ingress configuration.
   ##
