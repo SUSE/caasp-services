@@ -11,7 +11,7 @@ portus:
   ##
   image:
     repository: "opensuse/portus"
-    tag: "2.2"
+    tag: "2.1"
     pullPolicy: "IfNotPresent"
 
   ## Service configuration.
@@ -67,7 +67,7 @@ crono:
   ##
   image:
     repository: "opensuse/portus"
-    tag: "2.2"
+    tag: "2.1"
     pullPolicy: "IfNotPresent"
 
   ## Resource configuration.
