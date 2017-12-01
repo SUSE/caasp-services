@@ -38,16 +38,15 @@ $ helm delete my-release
 The command removes nearly all the Kubernetes components associated with the
 chart and deletes the release.
 
-## SSH Keys
+## Portus TLS
 
-To run Portus you'll need an SSL key and certificate that cover the domain names `portus.service.name`,
-`registry.service.name` and `nginx.service.name`. For your convenience, this chart provides
-a default key `portus.key` and certificate `portus.cert`, but it is recommended that you generate
-your own key and certificate.
+To run Portus securely you'll need an SSL key and certificate that cover the domain names portus, docker registry and nginx services. This chart does not use TLS by default, but it does support a TLS installation.
 
-```console
-TODO
-```
+To use TLS you must set `portus.tls.enabled` to true.
+
+You so will need to generate an appropriate key and certificate if you would like to install the chart securely. The Portus, Docker registry and Nginx services must all be covered by the TLS credentials.
+
+If you would like to enable TLS for the Portus installation you will need to store your key in the value `portus.tls.key` and the certificate in the value `portus.tls.cert`
 
 And update the `values.yaml` file with the generated keys:
 
@@ -61,7 +60,6 @@ The following tables lists the configurable parameters of the portus chart and t
 | `portus.image.repository`            | Portus image repository name               | `opensuse/portus`                                          |
 | `portus.image.tag`                   | Portus image tag name                      | `head`                                                     |
 | `portus.image.pullPolicy`            | Portus image pull policy                   | `IfNotPresent`                                             |
-| `portus.service.name`                | Portus service name                        | `portus`                                                   |
 | `portus.service.port`                | Portus service port                        | `3000`                                                     |
 | `portus.resources.requests.memory`   | Portus deployment memory resources         | `512Mi`                                                    |
 | `portus.resources.requests.cpu`      | Portus deployment cpu resources            | `300m`                                                     |
@@ -71,8 +69,9 @@ The following tables lists the configurable parameters of the portus chart and t
 | `portus.productionPassword`          | Password to connect to database            | `nil`                                                      |
 | `portus.password`                    | Password used for background job user      | _random 10 character long alphanumeric string_             |
 | `portus.secretKeyBase`               | Ruby on Rails secret app key               | _random 128 character long alphanumeric string_            |
-| `portus.key`                         | SSL key used between services              | _generated example key_                                    |
-| `portus.cert`                        | SSL certificate used between services      | _self signed example certificate_                          |
+| `portus.tls.enabled`                 | Determines if internal services use tls    | `false`                                                    |
+| `portus.tls.key`                     | SSL key for internal services              | `nil`                                                      |
+| `portus.tls.cert`                    | SSL certificate for internal services      | `nil`                                                      |
 | `crono.replicas`                     | Crono deployment replica count             | `1`                                                        |
 | `crono.image.repository`             | Crono image repository name                | `opensuse/portus`                                          |
 | `crono.image.tag`                    | Crono image tag name                       | `head`                                                     |
@@ -96,13 +95,12 @@ The following tables lists the configurable parameters of the portus chart and t
 | `nginx.image.tag`                    | Nginx image tag name                       | `alpine`                                                   |
 | `nginx.image.pullPolicy`             | Nginx registry image pull policy           | `IfNotPresent`                                             |
 | `nginx.host`                         | Domain name nginx proxy should use         | `portus-test.us.to`                                        |
-| `nginx.service.name`                 | Nginx service name                         | `nginx`                                                    |
-| `nginx.service.type`                 | Nginx service type                         | `NodePort`                                                 |
-| `nginx.service.nodePort`             | Nginx proxy external port                  | `32123`                                                    |
-| `nginx.service.port`                 | Nginx proxy internal port                  | `443`                                                      |
+| `nginx.service.type`                 | Nginx service type                         | `LoadBalancer`                                             |
+| `nginx.service.nodePort`             | Nginx proxy external port                  | `nil`                                                      |
+| `nginx.service.port`                 | Nginx proxy internal port                  | `80`                                                       |
 | `nginx.ingress.enabled`              | Determines if nginx proxy uses ingress     | `false`                                                    |
 | `nginx.ingress.annotations`          | Nginx ingress annotations                  | `{}`                                                       |
-| `nginx.ingress.tls`                  | Nginx TLS configuration                    | `[]`                                                       |
+| `nginx.ingress.tls.enabled`          | Determines if ingress uses TLS             | `[]`                                                       |
 | `nginx.resources.requests.memory`    | Nginx deployment memory resources          | `512Mi`                                                    |
 | `nginx.resources.requests.cpu`       | Nginx deployment cpu resources             | `300m`                                                     |
 | `mariadb.enabled`                    | Mariadb chart should be installed          | `true`                                                     |
@@ -111,8 +109,6 @@ The following tables lists the configurable parameters of the portus chart and t
 | `mariadb.persistence.size`           | Mariadb persistence capacity               | `8Gi`                                                      |
 | `mariadb.mariadbUser`                | Mariadb user account name                  | `portus`                                                   |
 | `mariadb.mariadbDatabase`            | Mariadb database name                      | `portus`                                                   |
-
-The above parameters map to the env variables defined in [opensuse/portus](https://hub.docker.com/r/opensuse/portus/). For more information please refer to the [opensuse/portus](https://hub.docker.com/r/opensuse/portus/) image documentation.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

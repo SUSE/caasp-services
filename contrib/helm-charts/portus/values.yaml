@@ -50,13 +50,13 @@ portus:
   tls:
     enabled: false
 
-  ## must include key if using tls
-  ##
-  # key: |
+    ## must include key if using tls
+    ##
+    # key: |
 
-  ## must include certificate if using tls
-  ##
-  # cert: |
+    ## must include certificate if using tls
+    ##
+    # cert: |
  
 ## Default values for Crono. 
 ##
