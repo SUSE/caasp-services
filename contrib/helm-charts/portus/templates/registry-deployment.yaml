@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.registry.name }}" 
+  name: {{ template "registry.fullname" . }} 
   labels:
-    name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+    name: {{ template "registry.fullname" . }}
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name }}
@@ -12,86 +12,106 @@ spec:
   replicas: {{ .Values.registry.replicas }} 
   selector:
     matchLabels:
-      name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+      name: {{ template "registry.fullname" . }}
   template:
     metadata:
       labels:
-        name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+        name: {{ template "registry.fullname" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+        - name: {{ template "registry.fullname" . }}
           image: "{{ .Values.registry.image.repository }}:{{ .Values.registry.image.tag }}" 
           imagePullPolicy: {{ .Values.registry.image.pullPolicy }} 
+          {{- if .Values.portus.tls.enabled }}
           command: ["/bin/sh"]
           args: ["-c", "cp /certificates/portus.crt /usr/local/share/ca-certificates;update-ca-certificates;registry serve /etc/docker/registry/config.yml"]
+          {{- end }}
           ports:
-            - containerPort: {{ .Values.registry.port }} 
-            - containerPort: {{ .Values.registry.debugPort }} 
+            - containerPort: {{ .Values.registry.service.port }} 
+            - containerPort: {{ .Values.registry.service.debugPort }} 
           env:
+            {{- if .Values.portus.tls.enabled }}
             - name: REGISTRY_AUTH_TOKEN_REALM
               valueFrom:
                 configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+                  name: {{ template "registry.fullname" . }}
                   key: REGISTRY_AUTH_TOKEN_REALM
             - name: REGISTRY_AUTH_TOKEN_SERVICE
               valueFrom:
                 configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+                  name: {{ template "registry.fullname" . }}
                   key: REGISTRY_AUTH_TOKEN_SERVICE
             - name: REGISTRY_AUTH_TOKEN_ISSUER
               valueFrom:
                 configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+                  name: {{ template "registry.fullname" . }}
                   key: REGISTRY_AUTH_TOKEN_ISSUER
-            - name: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
-              valueFrom:
-                configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
-                  key: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
-            - name: REGISTRY_HTTP_TLS_CERTIFICATE
-              valueFrom:
-                configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
-                  key: REGISTRY_HTTP_TLS_CERTIFICATE
             - name: REGISTRY_HTTP_TLS_KEY
               valueFrom:
                 configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+                  name: {{ template "registry.fullname" . }}
                   key: REGISTRY_HTTP_TLS_KEY
+            - name: REGISTRY_HTTP_TLS_CERTIFICATE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "registry.fullname" . }}
+                  key: REGISTRY_HTTP_TLS_CERTIFICATE
+            - name: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "registry.fullname" . }}
+                  key: REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE
+            {{- else }}
+            - name: REGISTRY_AUTH_SILLY_REALM
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "registry.fullname" . }}
+                  key: REGISTRY_AUTH_SILLY_REALM
+            - name: REGISTRY_AUTH_SILLY_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "registry.fullname" . }}
+                  key: REGISTRY_AUTH_SILLY_SERVICE
+            {{- end }}
             - name: REGISTRY_NOTIFICATIONS_ENDPOINTS
               valueFrom:
                 configMapKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+                  name: {{ template "registry.fullname" . }}
                   key: REGISTRY_NOTIFICATIONS_ENDPOINTS
+          resources:
+{{ toYaml .Values.registry.resources | indent 12 }}
           volumeMounts:
+            {{- if .Values.portus.tls.enabled }}
             - name: certvol
               mountPath: /certificates
-              readOnly: true
+            {{- end }}
             - name: config
               mountPath: /etc/docker/registry
               readOnly: true
             - name: storage
               mountPath: {{ .Values.registry.mountPath }}
       volumes:
+        {{- if .Values.portus.tls.enabled }}
         - name: certvol
           secret:
-            secretName: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+            secretName: {{ template "portus.fullname" . }}
             items:
             - key: key
               path: portus.key
             - key: cert
               path: portus.crt
+        {{- end }}
         - name: config
           configMap:
-            name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+            name: {{ template "registry.fullname" . }}
             items:
               - key: config
                 path: config.yml
         - name: storage
           {{- if .Values.registry.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+            claimName: {{ template "registry.fullname" . }}
           {{- else }}
           emptyDir: {}
           {{- end }}

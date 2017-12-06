@@ -1,14 +1,14 @@
 a-piVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.portus.name }}"
+  name: {{ template "portus.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  PORTUS_MACHINE_FQDN_VALUE: {{ .Values.nginx.fqdn | quote }}
+  PORTUS_MACHINE_FQDN_VALUE: "portus"
 
   {{- if .Values.mariadb.enabled }}
   PORTUS_PRODUCTION_HOST: {{ template "mariadb.fullname" . }}
@@ -19,9 +19,15 @@ data:
   PORTUS_PRODUCTION_DATABASE: {{ .Values.portus.productionDatabase | quote }}
   PORTUS_PRODUCTION_USERNAME: {{ .Values.portus.productionUsername | quote }}
   PORTUS_KEY_PATH: "/certificates/portus.key"
+
+  {{- if .Values.portus.tls.enabled }}
   PORTUS_CERT_PATH: "/certificates/portus.crt"
   PORTUS_CHECK_SSL_USAGE_ENABLED: "true"
-  RAILS_SERVE_STATIC_FILES: {{ .Values.portus.railsServeStaticFiles | quote }}
+  {{- else }}
+  PORTUS_CHECK_SSL_USAGE_ENABLED: "false"
+  {{- end }}
+
+  RAILS_SERVE_STATIC_FILES: "true" 
   CRONO_INIT_COMMAND: "bin/crono"
 
   config: |
@@ -200,7 +206,7 @@ data:
 
     # By default require ssl to be enabled when running on production
     check_ssl_usage:
-      enabled: true
+      enabled: "{{ .Values.portus.tls.enabled }}"
 
     # Contains advanced options that tweak how Portus interacts with the
     # Registry. Don't touch any of these values unless you *really* know what you
@@ -231,7 +237,7 @@ data:
 
     # The FQDN of the machine where Portus is being deployed.
     machine_fqdn:
-      value: "{{ .Values.portus.name }}"
+      value: "portus"
 
     # Allow users to have different display names on the web site. This will
     # **not** be the username used by `docker login`. It defaults to false because

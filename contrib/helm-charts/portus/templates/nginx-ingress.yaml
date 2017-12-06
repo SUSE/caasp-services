@@ -2,7 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+  name: {{ template "nginx.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -14,14 +14,16 @@ metadata:
     {{- end }}
 spec:
   rules:
-    - host: {{ .Values.nginx.fqdn | quote }}
+    - host: {{ .Values.nginx.ingress.host | quote }}
       http:
         paths:
           - backend:
-              serviceName: {{ .Values.nginx.name }} 
+              serviceName: {{ template "nginx.fullname" . }}
               servicePort: {{ .Values.nginx.service.port }}
+  {{- if .Values.nginx.ingress.tls.enabled }}
   tls:
     - secretName: {{ .Values.nginx.ingress.tls.secretName | quote }}
       hosts:
-        - {{ .Values.nginx.fqdn | quote }}
+        - {{ .Values.nginx.ingress.host | quote }}
+  {{- end }}
 {{- end }}

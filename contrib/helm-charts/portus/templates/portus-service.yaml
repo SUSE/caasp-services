@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.registry.name }} 
+  name: {{ template "portus.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -9,9 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   selector:
-    name: "{{ .Release.Name }}-{{ .Values.registry.name }}"
+    name: {{ template "portus.fullname" . }}
   ports:
-    - name: repo
-      port: {{ .Values.registry.port }} 
-    - name: debug
-      port: {{ .Values.registry.debugPort }} 
+    - name: "{{ .Values.portus.service.name }}"
+      port: {{ .Values.portus.service.port }} 

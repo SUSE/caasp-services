@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "{{ .Release.Name }}-{{ .Values.nginx.name }}"
+  name: {{ template "nginx.fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -42,20 +42,21 @@ data:
         '' 'registry/2.0';
       }
 
-      upstream {{ .Values.portus.name }} {
+      upstream {{ template "portus.fullname" . }} {
         least_conn;
-        server {{ .Values.portus.name }}:{{ .Values.portus.port }} max_fails=3 fail_timeout=15s;
+        server {{ template "portus.fullname" . }}:{{ .Values.portus.service.port }} max_fails=3 fail_timeout=15s;
       }
 
-      upstream {{ .Values.registry.name }}:{{ .Values.registry.port }} {
+      upstream {{ template "registry.fullname" . }}:{{ .Values.registry.service.port }} {
         least_conn;
-        server {{ .Values.registry.name }}:{{ .Values.registry.port }} max_fails=3 fail_timeout=15s;
+        server {{ template "registry.fullname" . }}:{{ .Values.registry.service.port }} max_fails=3 fail_timeout=15s;
       }
 
       server {
+        server_name {{ template "nginx.fullname" . }}
+
+        {{- if .Values.portus.tls.enabled }}
         listen {{ .Values.nginx.service.port }} ssl http2;
-        server_name "{{ .Values.nginx.name }}"
-        # root /srv/Portus/public;
 
         ##
         # SSL
@@ -85,6 +86,9 @@ data:
         #
         # http://blog.ivanristic.com/2013/08/configuring-apache-nginx-and-openssl-for-forward-secrecy.html
         ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+        {{- else }}
+        listen {{ .Values.nginx.service.port }} http2;
+        {{- end }}
 
         ##
         # Docker-specific stuff.
@@ -141,7 +145,12 @@ data:
           ## See the map directive above where this variable is defined.
           add_header 'Docker-Distribution-Api-Version' $docker_distribution_api_version always;
 
-          proxy_pass https://{{ .Values.registry.name }}:{{ .Values.registry.port }};
+          {{- if .Values.portus.tls.enabled }}
+          proxy_pass https://{{ template "registry.fullname" . }}:{{ .Values.registry.service.port }};
+          {{- else }}
+          proxy_pass http://{{ template "registry.fullname" . }}:{{ .Values.registry.service.port }};
+          {{- end }}
+
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -152,7 +161,12 @@ data:
 
         # Portus needs to handle /v2/token for authentication
         location = /v2/token {
-          proxy_pass https://{{ .Values.portus.name }};
+          {{- if .Values.portus.tls.enabled }}
+          proxy_pass https://{{ template "portus.fullname" . }};
+          {{- else }}
+          proxy_pass http://{{ template "portus.fullname" . }};
+          {{- end }}
+
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -163,7 +177,12 @@ data:
 
         # Portus needs to handle /v2/webhooks/events for notifications
         location = /v2/webhooks/events {
-          proxy_pass https://{{ .Values.portus.name }};
+          {{- if .Values.portus.tls.enabled }}
+          proxy_pass https://{{ template "portus.fullname" . }};
+          {{- else }}
+          proxy_pass http://{{ template "portus.fullname" . }};
+          {{- end }}
+
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -174,11 +193,16 @@ data:
 
         # Portus handles everything else for the UI
         location / {
-          try_files $uri/index.html $uri.html $uri @portus;
+          try_files $uri/index.html $uri.html $uri @{{ template "portus.fullname" . }};
         }
 
-        location @{{ .Values.portus.name }} {
-          proxy_pass https://{{ .Values.portus.name }};
+        location @{{ template "portus.fullname" . }} {
+          {{- if .Values.portus.tls.enabled }}
+          proxy_pass https://{{ template "portus.fullname" . }};
+          {{- else }}
+          proxy_pass http://{{ template "portus.fullname" . }};
+          {{- end }}
+
           proxy_set_header Host $http_host;   # required for docker client's sake
           proxy_set_header X-Real-IP $remote_addr; # pass on real client's IP
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
