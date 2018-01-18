@@ -1,10 +1,10 @@
 # Ingress Controllers
 
-The Kubernetes commnunity primarily uses two Ingress Controllers, in order to support Ingress resources. 
-[nginx-ingress](https://github.com/kubernetes/ingress-nginx), and
-[voyager](https://github.com/appscode/voyager) are both fully featured, and actively developed Ingress
-Controllers. They are both popular, and have either could potentially be used as an Ingress Controller
-for CaaS.
+A number of Ingress Controllers have been developed, in order to support Ingress resources.
+[nginx-ingress](https://github.com/kubernetes/ingress-nginx),
+[voyager](https://github.com/appscode/voyager),
+[traefik](https://github.com/containous/traefik),
+[contour](https://github.com/heptio/contour), are are all used by the community.
 
 ---
 
@@ -12,12 +12,10 @@ for CaaS.
 
 #### Overview
 
-- Created and overseen by NGINX.
+- Created by NGINX.
 - Has great documentation https://github.com/kubernetes/ingress-nginx.
 - Written in Go.
 - Has an official [chart](https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress).
-
-#### Features
 
 #### Concerns
 
@@ -27,33 +25,51 @@ for CaaS.
 
 #### Overview
 
-- Created and overseen by AppsCode.
+- Created by AppsCode.
 - Does not have great documentation https://github.com/appscode/voyager/tree/master/docs. Missing
 sections, and hard to find specific areas.
 - Written in Go.
 - Has an official [chart](https://github.com/kubernetes/charts/tree/master/stable/voyager).
 
-#### Features
+#### Concerns
+
+---
+
+## traefik
+
+#### Overview
+
+- Created by Containous.
 
 #### Concerns
 
 ---
 
+## contour
+
+#### Overview
+
+- Created by Containous.
+
+#### Concerns
+
+- At a much more incomplete stage than the other ingress
+
+---
+
 ### Comparisons
 
-| Feauture | nginx-ingress | voyager |
-|----------|--------------|------------------|
-| HTTP Loadbalancing| MAYBE??? | :white_check_mark: |
-| TCP Loadbalancing | MAYBE??? | :white_check_mark: |
-| TLS Termination | :white_check_mark: | :white_check_mark: |
-| Name and Path based virtual hosting | :white_check_mark: | :white_check_mark: |
-| Cross Namespace service support | :x: | :white_check_mark: |
-| URL and Header rewriting | MAYBE??? | :white_check_mark: |
-| Wildcard name virtual hosting | :white_check_mark: | :white_check_mark: |
-| Loadbalancer statistics | :x: | :white_check_mark: |
-| Route Traffic to StatefulSet Pods Based on Host Name | MAYBE??? | :white_check_mark: |
-| Weighted Loadbalancing for Canary Deployment| MAYBE??? | :white_check_mark: |
-| Supports Loadbalancer Source Range | MAYBE??? | :white_check_mark: |
-| Supports redirects/DNS resolve for `ExternalName` type service | MAYBE??? | :white_check_mark: |
-| Expose HAProxy stats for Prometheus | :white_check_mark: | :white_check_mark: |
-| Supports AWS certificate manager | :x: | :white_check_mark: |
+| Feauture | nginx-ingress | voyager | Traefik | Contour
+|----------|--------------|------------------|---------|--------| 
+| TLS Termination | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| TLS Passthrough | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| L7 Loadbalancing | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| RBAC | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Prometheus Metric Support | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| TCP Loadbalancing | :white_check_mark: | :white_check_mark: | :x: | :white_check_mark: |
+| Annotation Support | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| Cross Namespace Service Support | :x: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| Wildcard Virtual Hosting | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| Weighted Loadbalancing | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| Supports `ExternalName` Services | :white_check_mark: | :white_check_mark: | :white_check_mark: | :x: |
+| Default UI | :x: | :x: | :white_check_mark: | :x: |
