@@ -16,7 +16,7 @@ data:
   REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
   REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
   {{- else }}
-  REGISTRY_AUTH_SILLY_REALM: {{ printf "http://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (.Values.nginx.service.nodePort | default .Values.nginx.port) | quote }} 
+  REGISTRY_AUTH_SILLY_REALM: {{ printf "http://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (.Values.nginx.service.nodePort | default .Values.nginx.port) | quote }}
   REGISTRY_AUTH_SILLY_SERVICE: {{ printf "%s:%s" (include "registry.fullname" .) .Values.registry.service.port | quote }}
   {{- end }}
 

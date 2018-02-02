@@ -1,4 +1,4 @@
-a-piVersion: v1
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "portus.fullname" . }}
@@ -8,28 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  PORTUS_MACHINE_FQDN_VALUE: "portus"
-
-  {{- if .Values.mariadb.enabled }}
-  PORTUS_PRODUCTION_HOST: {{ template "mariadb.fullname" . }}
-  {{- else }}
-  PORTUS_PRODUCTION_HOST: {{ .Values.portus.productionHost | quote}}
-  {{- end }}
-
-  PORTUS_PRODUCTION_DATABASE: {{ .Values.portus.productionDatabase | quote }}
-  PORTUS_PRODUCTION_USERNAME: {{ .Values.portus.productionUsername | quote }}
-  PORTUS_KEY_PATH: "/certificates/portus.key"
-
-  {{- if .Values.portus.tls.enabled }}
-  PORTUS_CERT_PATH: "/certificates/portus.crt"
-  PORTUS_CHECK_SSL_USAGE_ENABLED: "true"
-  {{- else }}
-  PORTUS_CHECK_SSL_USAGE_ENABLED: "false"
-  {{- end }}
-
-  RAILS_SERVE_STATIC_FILES: "true" 
-  CRONO_INIT_COMMAND: "bin/crono"
-
   config: |
     # This file contains the default values for the configuration of this
     # application. In order to change them, write your own config-local.yml file
@@ -38,24 +16,24 @@ data:
 
     # Settings for the Portus mailer.
     email:
-      from: "portus@example.com"
-      name: "Portus"
-      reply_to: "no-reply@example.com"
+      from: {{ .Values.portus.config.email.from | quote }}
+      name: {{ .Values.portus.config.email.name | quote }}
+      reply_to: {{ .Values.portus.config.email.reply_to | quote }}
 
       # If enabled, then SMTP will be used. Otherwise 'sendmail' will be used
       # (defaults to: /usr/sbin/sendmail -i -t).
       smtp:
-        enabled: false
-        address: "smtp.example.com"
-        port: 587,
+        enabled: {{ .Values.portus.config.email.smtp.enabled }}
+        address: {{ .Values.portus.config.email.smtp.address | quote }}
+        port: {{ .Values.portus.config.email.smtp.port }}
         user_name: "username@example.com"
         password: "password"
-        domain: "example.com"
+        domain: {{ .Values.portus.config.email.smtp.domain | quote }}
 
     # If enabled, then the profile picture will be picked from the Gravatar
     # associated with each user. See: https://en.gravatar.com/
     gravatar:
-      enabled: true
+      enabled: {{ .Values.portus.config.gravatar }}
 
     # Allow admins and owners to delete images and tags. This feature should *only*
     # be enabled if the version of the running registry is 2.4 or higher since
@@ -68,7 +46,7 @@ data:
     # Also, you can read more in our documentation here:
     # http://port.us.org/features/removing_images.html
     delete:
-      enabled: false
+      enabled: {{ .Values.portus.config.delete }}
 
     # LDAP support. If enabled, then only users of the specified LDAP server will
     # be able to use Portus. Take a look at the documentation of LDAP support in our
@@ -90,7 +68,7 @@ data:
       filter: ""
 
       # The LDAP attribute where to search for username. The default is 'uid'.
-      uid: "uid"
+      uid: ""
 
       # LDAP credentials used to search for a user.
       authentication:
@@ -157,7 +135,7 @@ data:
         # Only members of organization's team can sign in/up with Github.
         organization: ""
         team: ""
-         # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+        # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
         domain: ""
 
       # Gitlab authentication support.
@@ -168,7 +146,7 @@ data:
         secret: ""
         # Only member of the group can sign in/up with Gitlab.
         group: ""
-         # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+        # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
         domain: ""
         # The Gitlab server to be used. If empty, then https://gitlab.com is assumed.
         server: ""
@@ -180,7 +158,7 @@ data:
         # Application credentials.
         key: ""
         secret: ""
-         # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
+        # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
         domain: ""
         options:
           # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
@@ -193,7 +171,7 @@ data:
     #   rake portus:make_admin[USERNAME]
     # in order to set the admin user
     first_user_admin:
-      enabled: true
+      enabled: {{ .Values.portus.config.first_user_admin }}
 
     # If enabled, then users can signup with the signup form. Otherwise, the admin
     # is responsible of creating new users by either:
@@ -202,11 +180,11 @@ data:
     # This is ignored if LDAP is enabled. Read more about this here:
     # http://port.us.org/features/disabling_signup.html
     signup:
-      enabled: true
+      enabled: {{ .Values.portus.config.signup }}
 
     # By default require ssl to be enabled when running on production
     check_ssl_usage:
-      enabled: "{{ .Values.portus.tls.enabled }}"
+      enabled: {{ .Values.portus.tls.enabled }}
 
     # Contains advanced options that tweak how Portus interacts with the
     # Registry. Don't touch any of these values unless you *really* know what you
@@ -235,55 +213,60 @@ data:
       timeout:
         value: 2
 
+      # Set timeout in seconds for read response from registry.
+      read_timeout:
+        value: 120
+
     # The FQDN of the machine where Portus is being deployed.
     machine_fqdn:
-      value: "portus"
+      value: {{ template "portus.fullname" . }}
 
     # Allow users to have different display names on the web site. This will
     # **not** be the username used by `docker login`. It defaults to false because
     # it might confuse users that are not fully aware of it. You can read more about
     # it here: http://port.us.org/features/display_name.html
     display_name:
-      enabled: false
+      enabled: {{ .Values.portus.config.display_name }}
 
     user_permission:
       # Allow users to change the visibility or their personal namespace. If this is
       # disabled, only an admin will be able to change this. It defaults to true.
       change_visibility:
-        enabled: true
+        enabled: {{ .Values.portus.config.user_permission.change_visibility }}
 
       # Allow users to create teams. If this is disabled only an admin will be able
       # to do this. This defaults to true.
       create_team:
-        enabled: true
+        enabled: {{ .Values.portus.config.user_permission.create_team }}
 
       # Allow users to create/modify teams if they are an owner of it. If this is
       # disabled only an admin will be able to do this. This defaults to true.
       manage_team:
-        enabled: true
+        enabled: {{ .Values.portus.config.user_permission.manage_team }}
 
       # Allow users to create namespaces. If this is disabled, only an admin will
       # be able to do this. This defaults to true.
       create_namespace:
-        enabled: true
+        enabled: {{ .Values.portus.config.user_permission.create_namespace }}
 
       # Allow users to create/modify namespaces if they are an owner of it. If this
       # is disabled, only an admin will be able to do this. This defaults to true.
       manage_namespace:
-        enabled: true
+        enabled: {{ .Values.portus.config.user_permission.manage_namespace }}
 
     # Security scanner support. Add the server location for each driver in order to
     # enable it. If no drivers have been enabled, then this feature is skipped
     # altogether. Enabling multiple drivers will simply aggregate the information
     # provided by each driver.
     security:
-      # CoreOS Clair support (https://github.com/coreos/clair).
+      # CoreOS Clair support (https://github.com/coreos/clair). This is only
+      # guaranteed to work for v2.0.x releases of Clair.
       clair:
-        server: "http://clair:6060"
+        server: {{ .Values.portus.config.security.clair.server | quote }}
 
         # Port being used by Clair to report its status. Taking the default from
         # Clair.
-        health_port: 6061
+        health_port: {{ .Values.portus.config.security.clair.health_port }}
 
       # zypper-docker can be run as a server with its `serve` command. This backend
       # fetches the information as given by zypper-docker. Note that this feature
@@ -293,7 +276,7 @@ data:
       # NOTE: support for this is experimental since this functionality has not
       # been merged into master yet in zypper-docker.
       zypper:
-        server: ""
+        server: {{ .Values.portus.config.security.zypper.server | quote }}
 
       # This backend is only used for testing purposes, don't use it.
       dummy:
@@ -302,4 +285,4 @@ data:
     # Allow anonymous (non-logged-in) users to explore the images available in your
     # Docker Registry. Only images on public namespaces will be shown.
     anonymous_browsing:
-      enabled: true
+      enabled: {{ .Values.portus.config.anonymous_browsing }}
