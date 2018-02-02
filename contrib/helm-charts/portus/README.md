@@ -99,7 +99,7 @@ The following tables lists the configurable parameters of the portus chart and t
 | `portus.tls.key`                                  | SSL key for internal services              | ``                                              |
 | `portus.tls.cert`                                 | SSL certificate for internal services      | ``                                              |
 | `portus.background.enabled`                       | Run background Portus jobs                 | `true`                                          |
-| `portus.background.resources.requests.memory`     | Portus background process memory resources | `300Mi`                                         |
+| `portus.background.resources.requests.memory`     | Portus background process memory resources | `512Mi`                                         |
 | `portus.background.resources.requests.cpu`        | Portus background process cpu resources    | `300m`                                          |
 | `registry.replicas`                               | Docker registry deployment replica count   | `1`                                             |
 | `registry.mountPath`                              | Path uploaded images are stored at         | `/storage`                                      |
