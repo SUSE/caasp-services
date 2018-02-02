@@ -166,19 +166,17 @@ nginx:
 
     ## Anntations to be added to the web ingress
     ##
-    annotations:
-      kubernetes.io/ingress.class: "nginx"
-      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      ingress.kubernetes.io/proxy-body-size: "0"
-
+    # annotations:
+    #   kubernetes.io/ingress.class: "nginx"
+    #   nginx.ingress.kubernetes.io/proxy-body-size: "0"
     #   kubernetes.io/ingress.allow-http: "false"
     #   ingress.kubernetes.io/ssl-passthrough: "true"
 
     ## TLS configuration
     ## the ingress host must be covered by the key/cert in order for TLS to work properly
     ##
-    tls:
-      enabled: false
+    # tls:
+    #   enabled: false
 
       ## Secrets containing SSL key and cert must be manually created in the namespace
       ##
