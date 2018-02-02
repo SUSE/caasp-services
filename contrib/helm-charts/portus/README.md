@@ -58,61 +58,80 @@ If you would like to enable TLS for the Portus installation you will need to sto
 
 The following tables lists the configurable parameters of the portus chart and their default values.
 
-| Parameter                            | Description                                | Default                                                    |
-| ------------------------------------ | ------------------------------------------ | ---------------------------------------------------------- |
-| `portus.replicas`                    | Portus deployment replica count            | `1`                                                        |
-| `portus.image.repository`            | Portus image repository name               | `opensuse/portus`                                          |
-| `portus.image.tag`                   | Portus image tag name                      | `head`                                                     |
-| `portus.image.pullPolicy`            | Portus image pull policy                   | `IfNotPresent`                                             |
-| `portus.service.port`                | Portus service port                        | `3000`                                                     |
-| `portus.resources.requests.memory`   | Portus deployment memory resources         | `512Mi`                                                    |
-| `portus.resources.requests.cpu`      | Portus deployment cpu resources            | `300m`                                                     |
-| `portus.productionDatabase`          | Name of database Portus will use           | `portus`                                                   |
-| `portus.productionUsername`          | Name of database user Portus will use      | `portus`                                                   |
-| `portus.productionHost`              | Name of host providing database            | `nil`                                                      |
-| `portus.productionPassword`          | Password to connect to database            | `nil`                                                      |
-| `portus.password`                    | Password used for background job user      | _random 10 character long alphanumeric string_             |
-| `portus.secretKeyBase`               | Ruby on Rails secret app key               | _random 128 character long alphanumeric string_            |
-| `portus.tls.enabled`                 | Determines if internal services use tls    | `false`                                                    |
-| `portus.tls.key`                     | SSL key for internal services              | `nil`                                                      |
-| `portus.tls.cert`                    | SSL certificate for internal services      | `nil`                                                      |
-| `crono.replicas`                     | Crono deployment replica count             | `1`                                                        |
-| `crono.image.repository`             | Crono image repository name                | `opensuse/portus`                                          |
-| `crono.image.tag`                    | Crono image tag name                       | `head`                                                     |
-| `crono.image.pullPolicy`             | Crono image pull policy                    | `IfNotPresent`                                             |
-| `crono.resources.requests.memory`    | Crono deployment memory resources          | `512Mi`                                                    |
-| `crono.resources.requests.cpu`       | Crono deployment cpu resources             | `300m`                                                     |
-| `registry.replicas`                  | Docker registry deployment replica count   | `1`                                                        |
-| `registry.mountPath`                 | Path uploaded images are stored at         | `/storage`                                                 |
-| `registry.persistence.enabled`       | Docker registry use persistent storage     | `true`                                                     |
-| `registry.persistence.accessMode`    | Docker registry persistence access mode    | `ReadWriteOnce`                                            |
-| `registry.persistence.capacity`      | Docker registry persistence capacity       | `10Gi`                                                     |
-| `registry.image.repository`          | Docker registry image repository name      | `library/registry`                                         |
-| `registry.image.tag`                 | Docker registry image tag name             | `latest`                                                   |
-| `registry.image.pullPolicy`          | Docker registry image pull policy          | `IfNotPresent`                                             |
-| `registry.service.port`              | Docker registry API port                   | `5000`                                                     |
-| `registry.service.debugPort`         | Docker registry debug port                 | `5001`                                                     |
-| `registry.resources.requests.memory` | Registry deployment memory resources       | `512Mi`                                                    |
-| `registry.resources.requests.cpu`    | Registry deployment cpu resources          | `300m`                                                     |
-| `nginx.replicas`                     | Nginx deployment replica count             | `1`                                                        |
-| `nginx.image.repository`             | Nginx image repository name                | `library/nginx`                                            |
-| `nginx.image.tag`                    | Nginx image tag name                       | `alpine`                                                   |
-| `nginx.image.pullPolicy`             | Nginx registry image pull policy           | `IfNotPresent`                                             |
-| `nginx.host`                         | Domain name nginx proxy should use         | `portus-test.us.to`                                        |
-| `nginx.service.type`                 | Nginx service type                         | `LoadBalancer`                                             |
-| `nginx.service.nodePort`             | Nginx proxy external port                  | `nil`                                                      |
-| `nginx.service.port`                 | Nginx proxy internal port                  | `80`                                                       |
-| `nginx.ingress.enabled`              | Determines if nginx proxy uses ingress     | `false`                                                    |
-| `nginx.ingress.annotations`          | Nginx ingress annotations                  | `{}`                                                       |
-| `nginx.ingress.tls.enabled`          | Determines if ingress uses TLS             | `[]`                                                       |
-| `nginx.resources.requests.memory`    | Nginx deployment memory resources          | `512Mi`                                                    |
-| `nginx.resources.requests.cpu`       | Nginx deployment cpu resources             | `300m`                                                     |
-| `mariadb.enabled`                    | Mariadb chart should be installed          | `true`                                                     |
-| `mariadb.persistence.enabled`        | Mariadb use persistent storage             | `false`                                                    |
-| `mariadb.persistence.accessMode`     | Mariadb persistence access mode            | `ReadWriteOnce`                                            |
-| `mariadb.persistence.size`           | Mariadb persistence capacity               | `8Gi`                                                      |
-| `mariadb.mariadbUser`                | Mariadb user account name                  | `portus`                                                   |
-| `mariadb.mariadbDatabase`            | Mariadb database name                      | `portus`                                                   |
+| Parameter                                         | Description                                | Default                                         |
+| ------------------------------------------------- | ------------------------------------------ | ----------------------------------------------- |
+| `portus.replicas`                                 | Portus deployment replica count            | ``                                              |
+| `portus.image.repository`                         | Portus image repository name               | `opensuse/portus`                               |
+| `portus.image.tag`                                | Portus image tag name                      | `2.3`                                           |
+| `portus.image.pullPolicy`                         | Portus image pull policy                   | `IfNotPresent`                                  |
+| `portus.service.port`                             | Portus service port                        | `3000`                                          |
+| `portus.resources.requests.memory`                | Portus memory resources                    | `512Mi`                                         |
+| `portus.resources.requests.cpu`                   | Portus cpu resources                       | `300m`                                          |
+| `portus.dbAdapter`                                | Database adapter Portus should use         | `mysql2`                                        |
+| `portus.dbHost`                                   | Name of host providing database            | ``                                              |
+| `portus.dbDatabase`                               | Name of database Portus will use           | ``                                              |
+| `portus.dbUsername`                               | Name of database user Portus will use      | ``                                              |
+| `portus.dbPassword`                               | Password to connect to database            | ``                                              |
+| `portus.password`                                 | Password used for background job user      | _random 10 character long alphanumeric string_  |
+| `portus.secretKeyBase`                            | Ruby on Rails secret app key               | _random 128 character long alphanumeric string_ |
+| `portus.config.email.from`                        | Email from address                         | `portus@example.com`                            |
+| `portus.config.email.name`                        | Email from name                            | `Portus`                                        |
+| `portus.config.email.reply_to`                    | Email reply-to                             | `no-reply@example.com`                          |
+| `portus.config.email.smtp.enabled`                | Enable SMTP email                          | `false`                                         |
+| `portus.config.email.smtp.address`                | SMTP address                               | `smtp.example.com`                              |
+| `portus.config.email.smtp.port`                   | SMTP config                                | `587`                                           |
+| `portus.config.email.smtp.domain`                 | SMTP port                                  | `example.com`                                   |
+| `portus.config.gravatar`                          | Use Gravatar                               | `true`                                          |
+| `portus.config.delete`                            | Allow repository deletion                  | `true`                                          |
+| `portus.config.first_user_admin`                  | Make initial user admin                    | `true`                                          |
+| `portus.config.signup`                            | Allow guests accounts                      | `true`                                          |
+| `portus.config.display_name`                      | Allow users to have display names          | `false`                                         |
+| `portus.config.user_permission.change_visibility` | Users can edit namespace visibility        | `true`                                          |
+| `portus.config.user_permission.create_team`       | Users can creat teams                      | `true`                                          |
+| `portus.config.user_permission.manage_team`       | Users can edit teams                       | `true`                                          |
+| `portus.config.user_permission.create_namespace`  | Users can create namespaces                | `true`                                          |
+| `portus.config.user_permission.manage_namespace`  | Users can edit namespaces                  | `true`                                          |
+| `portus.config.security.clair.server`             | Name of Clair server                       | ``                                              |
+| `portus.config.security.clair.health_port`        | Health port Clair is using                 | `6061`                                          |
+| `portus.config.security.zypper.server`            | Name of ZypperDocker server                | ``                                              |
+| `portus.config.anonymous_browsing`                | Allow anonymous repository browsing        | `true`                                          |
+| `portus.tls.enabled`                              | Determines if internal services use tls    | `false`                                         |
+| `portus.tls.key`                                  | SSL key for internal services              | ``                                              |
+| `portus.tls.cert`                                 | SSL certificate for internal services      | ``                                              |
+| `portus.background.enabled`                       | Run background Portus jobs                 | `true`                                          |
+| `portus.background.resources.requests.memory`     | Portus background process memory resources | `300Mi`                                         |
+| `portus.background.resources.requests.cpu`        | Portus background process cpu resources    | `300m`                                          |
+| `registry.replicas`                               | Docker registry deployment replica count   | `1`                                             |
+| `registry.mountPath`                              | Path uploaded images are stored at         | `/storage`                                      |
+| `registry.persistence.enabled`                    | Docker registry use persistent storage     | `true`                                          |
+| `registry.persistence.accessMode`                 | Docker registry persistence access mode    | `ReadWriteOnce`                                 |
+| `registry.persistence.capacity`                   | Docker registry persistence capacity       | `10Gi`                                          |
+| `registry.image.repository`                       | Docker registry image repository name      | `library/registry`                              |
+| `registry.image.tag`                              | Docker registry image tag name             | `latest`                                        |
+| `registry.image.pullPolicy`                       | Docker registry image pull policy          | `IfNotPresent`                                  |
+| `registry.service.port`                           | Docker registry API port                   | `5000`                                          |
+| `registry.service.debugPort`                      | Docker registry debug port                 | `5001`                                          |
+| `registry.resources.requests.memory`              | Registry deployment memory resources       | `512Mi`                                         |
+| `registry.resources.requests.cpu`                 | Registry deployment cpu resources          | `300m`                                          |
+| `nginx.replicas`                                  | Nginx deployment replica count             | `1`                                             |
+| `nginx.image.repository`                          | Nginx image repository name                | `library/nginx`                                 |
+| `nginx.image.tag`                                 | Nginx image tag name                       | `alpine`                                        |
+| `nginx.image.pullPolicy`                          | Nginx registry image pull policy           | `IfNotPresent`                                  |
+| `nginx.host`                                      | Domain name nginx proxy should use         | ``                                              |
+| `nginx.service.type`                              | Nginx service type                         | `ClusterIP`                                     |
+| `nginx.service.port`                              | Nginx internal port                        | `80`                                            |
+| `nginx.service.nodePort`                          | Nginx external port                        | ``                                              |
+| `nginx.ingress.enabled`                           | Determines if nginx proxy uses ingress     | `false`                                         |
+| `nginx.ingress.annotations`                       | Nginx ingress annotations                  | `{}`                                            |
+| `nginx.ingress.tls.enabled`                       | Determines if ingress uses TLS             | `[]`                                            |
+| `nginx.resources.requests.memory`                 | Nginx deployment memory resources          | `512Mi`                                         |
+| `nginx.resources.requests.cpu`                    | Nginx deployment cpu resources             | `300m`                                          |
+| `mariadb.enabled`                                 | Mariadb chart should be installed          | `true`                                          |
+| `mariadb.persistence.enabled`                     | Mariadb use persistent storage             | `false`                                         |
+| `mariadb.persistence.accessMode`                  | Mariadb persistence access mode            | `ReadWriteOnce`                                 |
+| `mariadb.persistence.size`                        | Mariadb persistence capacity               | `8Gi`                                           |
+| `mariadb.mariadbUser`                             | Mariadb user account name                  | `portus`                                        |
+| `mariadb.mariadbDatabase`                         | Mariadb database name                      | `portus`                                        |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 

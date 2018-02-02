@@ -14,7 +14,7 @@ metadata:
     {{- end }}
 spec:
   rules:
-    - host: {{ .Values.nginx.ingress.host | quote }}
+    - host: {{ .Values.nginx.host | quote }}
       http:
         paths:
           - backend:
@@ -24,6 +24,6 @@ spec:
   tls:
     - secretName: {{ .Values.nginx.ingress.tls.secretName | quote }}
       hosts:
-        - {{ .Values.nginx.ingress.host | quote }}
+        - {{ .Values.nginx.host | quote }}
   {{- end }}
 {{- end }}

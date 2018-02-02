@@ -5,9 +5,9 @@
   {{- if .Values.nginx.ingress.enabled }}
   You can access Portus, and the private Docker registry through:
     {{- if .Values.nginx.ingress.tls.enabled }}
-    https://{{- .Values.nginx.ingress.host }}:{{- .Values.nginx.service.port }}
+    https://{{- .Values.nginx.host }}:{{- .Values.nginx.service.port }}
     {{- else }}
-    http://{{- .Values.nginx.ingress.host }}:{{- .Values.nginx.service.port }}
+    http://{{- .Values.nginx.host }}:{{- .Values.nginx.service.port }}
     {{- end }}
 
   {{- else if eq "LoadBalancer" .Values.nginx.service.type }}
@@ -82,8 +82,8 @@
   Click the button "Show Advanced"
 
   External Registry Name:
-    {{- if .Values.nginx.enabled }}
     {{- if .Values.nginx.ingress.enabled }}
+    {{- if .Values.nginx.ingress.tls.enabled }}
     https://{{ .Values.nginx.host }}:{{ .Values.nginx.service.port }}
     {{- else }}
     http://{{ .Values.nginx.host }}:{{ .Values.nginx.service.port }}
@@ -103,6 +103,5 @@
     {{- else }}
     echo http://$SERVICE_IP:{{ .Values.nginx.service.port }}
     {{- end }}
-
     {{- end }}
   {{- end }}
