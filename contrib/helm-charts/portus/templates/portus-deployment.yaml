@@ -29,6 +29,12 @@ spec:
           {{- end }}
           ports:
             - containerPort: {{ .Values.portus.service.port }}
+          livenessProbe:
+            exec:
+              command:
+                - /api/v1/health
+            initialDelaySeconds: 240
+            periodSeconds: 5
           env:
             - name: PORTUS_MACHINE_FQDN_VALUE
               value: {{ template "portus.fullname" . }}
