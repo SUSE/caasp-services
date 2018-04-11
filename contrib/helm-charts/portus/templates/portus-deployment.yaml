@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "portus.fullname" . }} 
+  name: {{ template "portus.fullname" . }}
   labels:
     name: {{ template "portus.fullname" . }}
     app: {{ template "name" . }}
@@ -30,11 +30,14 @@ spec:
           ports:
             - containerPort: {{ .Values.portus.service.port }}
           livenessProbe:
-            exec:
-              command:
-                - /api/v1/health
+            httpGet:
+              {{- if .Values.portus.tls.enabled }}
+              scheme: HTTPS
+              {{- end }}
+              path: /api/v1/_ping
+              port: {{ .Values.portus.service.port }}
             initialDelaySeconds: 240
-            periodSeconds: 5
+            timeoutSeconds: 10
           env:
             - name: PORTUS_MACHINE_FQDN_VALUE
               value: {{ template "portus.fullname" . }}
@@ -62,7 +65,7 @@ spec:
             - name: PORTUS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "portus.fullname" . }}  
+                  name: {{ template "portus.fullname" . }}
                   key: PORTUS_PRODUCTION_PASSWORD
             {{- end }}
             - name: PORTUS_KEY_PATH
