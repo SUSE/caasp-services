@@ -1,7 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "nginx.fullname" . }} 
+  name: {{ template "nginx.fullname" . }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/nginx-configmap.yaml") . | sha256sum }}
   labels:
     name: {{ template "nginx.fullname" . }}
     app: {{ template "name" . }}
@@ -9,7 +11,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.nginx.replicas }} 
+  replicas: {{ .Values.nginx.replicas }}
   selector:
     matchLabels:
       name: {{ template "nginx.fullname" . }}
@@ -21,8 +23,8 @@ spec:
     spec:
       containers:
         - name: {{ template "nginx.fullname" . }}
-          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}" 
-          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }} 
+          image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag }}"
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           resources:
 {{ toYaml .Values.nginx.resources | indent 12 }}
           volumeMounts:

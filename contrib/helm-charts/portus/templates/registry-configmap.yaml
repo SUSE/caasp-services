@@ -9,14 +9,14 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   {{- if .Values.portus.tls.enabled }}
-  REGISTRY_AUTH_TOKEN_REALM: {{ printf "https://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) .Values.nginx.port | quote }}
+  REGISTRY_AUTH_TOKEN_REALM: {{ printf "https://%s:%d/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (int .Values.nginx.service.port) | quote }}
   REGISTRY_AUTH_TOKEN_SERVICE: {{ printf "%s:%s" (include "registry.fullname" .) .Values.registry.service.port | quote }}
   REGISTRY_AUTH_TOKEN_ISSUER: {{ template "portus.fullname" . }}
   REGISTRY_HTTP_TLS_KEY: "/certificates/portus.key"
   REGISTRY_HTTP_TLS_CERTIFICATE: "/certificates/portus.crt"
   REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE: "/certificates/portus.crt"
   {{- else }}
-  REGISTRY_AUTH_SILLY_REALM: {{ printf "http://%s:%s/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (.Values.nginx.service.nodePort | default .Values.nginx.port) | quote }}
+  REGISTRY_AUTH_SILLY_REALM: {{ printf "http://%s:%d/v2/token" (.Values.nginx.host | default (printf "%s" (include "nginx.fullname" .))) (int (.Values.registry.service.nodePort | default .Values.nginx.service.port)) | quote }}
   REGISTRY_AUTH_SILLY_SERVICE: {{ printf "%s:%s" (include "registry.fullname" .) .Values.registry.service.port | quote }}
   {{- end }}
 

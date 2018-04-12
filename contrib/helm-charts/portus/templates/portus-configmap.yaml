@@ -8,6 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  log_level: {{ .Values.portus.env.log_level }}
   config: |
     # This file contains the default values for the configuration of this
     # application. In order to change them, write your own config-local.yml file
@@ -26,8 +27,8 @@ data:
         enabled: {{ .Values.portus.config.email.smtp.enabled }}
         address: {{ .Values.portus.config.email.smtp.address | quote }}
         port: {{ .Values.portus.config.email.smtp.port }}
-        user_name: "username@example.com"
-        password: "password"
+        user_name: {{ .Values.portus.config.email.smtp.username | quote }}
+        password: {{ .Values.portus.config.email.smtp.password | quote }}
         domain: {{ .Values.portus.config.email.smtp.domain | quote }}
 
     # If enabled, then the profile picture will be picked from the Gravatar
@@ -52,29 +53,29 @@ data:
     # be able to use Portus. Take a look at the documentation of LDAP support in our
     # online docs: http://port.us.org/features/2_LDAP-support.html.
     ldap:
-      enabled: false
+      enabled: {{ .Values.portus.config.ldap.enabled }}
 
-      hostname: "ldap_hostname"
-      port: 389
+      hostname: {{ .Values.portus.config.ldap.url | quote }}
+      port: {{ .Values.portus.config.ldap.port | quote }}
 
       # Available options: "plain", "simple_tls" and "starttls". The default is
       # "plain", the recommended is "starttls".
-      method: "plain"
+      method: {{ .Values.portus.config.ldap.method | quote }}
 
       # The base where users are located (e.g. "ou=users,dc=example,dc=com").
-      base: ""
+      base: {{ .Values.portus.config.ldap.base | quote }}
 
       # User filter (e.g. "mail=george*").
-      filter: ""
+      filter: {{ .Values.portus.config.ldap.filter | quote}}
 
       # The LDAP attribute where to search for username. The default is 'uid'.
-      uid: ""
+      uid: {{ .Values.portus.config.ldap.uid | quote }}
 
       # LDAP credentials used to search for a user.
       authentication:
-        enabled: false
-        bind_dn: ""
-        password: ""
+        enabled: {{ .Values.portus.config.ldap.authentication.enabled }}
+        bind_dn: {{ .Values.portus.config.ldap.authentication.bind_dn | quote }}
+        # password: {{ .Values.portus.config.ldap.authentication.password | quote }}
 
       # Portus needs an email for each user, but there's no standard way to get
       # that from LDAP servers. You can tell Portus how to get the email from users
@@ -95,8 +96,8 @@ data:
       # If something goes wrong when trying to guess the email, then it just falls
       # back to the default behavior (empty email).
       guess_email:
-        enabled: false
-        attr: ""
+        enabled: {{ .Values.portus.config.ldap.guess_email.enabled }}
+        attr: {{ .Values.portus.config.ldap.guess_email.attr | quote }}
 
     # OAuth support.
     oauth:
@@ -141,15 +142,15 @@ data:
       # Gitlab authentication support.
       # Callback url: <host>/users/auth/gitlab/callback
       gitlab:
-        enabled: false
-        application_id: ""
-        secret: ""
+        enabled: {{ .Values.portus.config.oauth.gitlab.enabled }}
+        application_id: {{ .Values.portus.config.oauth.gitlab.applicationId | quote }}
+        secret: {{ .Values.portus.config.oauth.gitlab.secret | quote }}
         # Only member of the group can sign in/up with Gitlab.
-        group: ""
+        group: {{ .Values.portus.config.oauth.gitlab.group | quote }}
         # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
-        domain: ""
+        domain: {{ .Values.portus.config.oauth.gitlab.domain | quote }}
         # The Gitlab server to be used. If empty, then https://gitlab.com is assumed.
-        server: ""
+        server: {{ .Values.portus.config.oauth.gitlab.server }}
 
       # Bitbucket authentication support. Need permission to read email.
       # Callback url: <host>/users/auth/bitbucket/callback

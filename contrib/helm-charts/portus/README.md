@@ -95,6 +95,18 @@ The following tables lists the configurable parameters of the portus chart and t
 | `portus.config.security.clair.health_port`        | Health port Clair is using                 | `6061`                                          |
 | `portus.config.security.zypper.server`            | Name of ZypperDocker server                | ``                                              |
 | `portus.config.anonymous_browsing`                | Allow anonymous repository browsing        | `true`                                          |
+| 'portus.config.ldap.enabled                       | Enable ldap authentication                 | `false`                                         |
+| 'portus.config.ldap.url                           | ldap url                                   | ``                                              |
+| 'portus.config.ldap.port                          | ldap port                                  | ``                                              |
+| 'portus.config.ldap.method                        | connection method                          | `plain`                                         |
+| 'portus.config.ldap.base                          | base where users are located               | ``                                              |
+| 'portus.config.ldap.uid                           | user filter                                | ``                                              |
+| 'portus.config.ldap.authentication.enabled        | enable authentication for query            | `false`                                         |
+| 'portus.config.ldap.authentication.bind_dn        | bind user                                  | ``                                              |
+| 'portus.config.ldap.authentication.password       | bind password                              | ``                                              |
+| 'portus.config.ldap.guess_email.enabled           | enable email guessing                      | `false`                                         |
+| 'portus.config.ldap.guess_email.attr              | attribute inside LDIF record               | ``                                              |
+| `portus.env.log_level`                            | log level                                  | `info`                                          |
 | `portus.tls.enabled`                              | Determines if internal services use tls    | `false`                                         |
 | `portus.tls.key`                                  | SSL key for internal services              | ``                                              |
 | `portus.tls.cert`                                 | SSL certificate for internal services      | ``                                              |

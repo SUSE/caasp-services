@@ -2,6 +2,8 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "portus.fullname" . }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/portus-configmap.yaml") . | sha256sum }}
   labels:
     name: {{ template "portus.fullname" . }}
     app: {{ template "name" . }}
@@ -50,6 +52,13 @@ spec:
               value: {{ .Values.mariadb.mariadbDatabase | quote }}
             - name: PORTUS_DB_USERNAME
               value: {{ .Values.mariadb.mariadbUser | quote }}
+            {{- if .Values.portus.config.ldap.authentication.enabled }}
+            - name: PORTUS_LDAP_AUTHENTICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "portus.fullname" . }}
+                  key: PORTUS_LDAP_AUTHENTICATION_PASSWORD
+            {{- end }}
             - name: PORTUS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -82,6 +91,11 @@ spec:
               value: {{ template "portus.fullname" . }} # :{{ .Values.portus.service.port }}
             - name: RAILS_SERVE_STATIC_FILES
               value: "true"
+            - name: PORTUS_LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "portus.fullname" . }}
+                  key: log_level
             - name: PORTUS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -124,6 +138,11 @@ spec:
                   name: {{ template "mariadb.fullname" . }}
                   key: mariadb-password
             {{- else }}
+            - name: PORTUS_LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "portus.fullname" . }}
+                  key: log_level
             - name: PORTUS_DB_HOST
               value: {{ .Values.portus.dbHost }}
             - name: PORTUS_DB_DATABASE

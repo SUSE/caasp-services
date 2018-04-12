@@ -1,7 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "registry.fullname" . }} 
+  name: {{ template "registry.fullname" . }}
+  annotations:
+    checksum/config: {{ include (print $.Template.BasePath "/registry-configmap.yaml") . | sha256sum }}
   labels:
     name: {{ template "registry.fullname" . }}
     app: {{ template "name" . }}
@@ -9,7 +11,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.registry.replicas }} 
+  replicas: {{ .Values.registry.replicas }}
   selector:
     matchLabels:
       name: {{ template "registry.fullname" . }}
@@ -21,15 +23,15 @@ spec:
     spec:
       containers:
         - name: {{ template "registry.fullname" . }}
-          image: "{{ .Values.registry.image.repository }}:{{ .Values.registry.image.tag }}" 
-          imagePullPolicy: {{ .Values.registry.image.pullPolicy }} 
+          image: "{{ .Values.registry.image.repository }}:{{ .Values.registry.image.tag }}"
+          imagePullPolicy: {{ .Values.registry.image.pullPolicy }}
           {{- if .Values.portus.tls.enabled }}
           command: ["/bin/sh"]
           args: ["-c", "cp /certificates/portus.crt /usr/local/share/ca-certificates;update-ca-certificates;registry serve /etc/docker/registry/config.yml"]
           {{- end }}
           ports:
-            - containerPort: {{ .Values.registry.service.port }} 
-            - containerPort: {{ .Values.registry.service.debugPort }} 
+            - containerPort: {{ .Values.registry.service.port }}
+            - containerPort: {{ .Values.registry.service.debugPort }}
           env:
             {{- if .Values.portus.tls.enabled }}
             - name: REGISTRY_AUTH_TOKEN_REALM

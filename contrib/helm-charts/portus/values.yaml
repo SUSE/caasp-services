@@ -40,9 +40,18 @@ portus:
   ##
   # password:
 
+  ## Defaults to a random 10-character alphanumeric string if not set
+  ## Password used for mariadb connection
+  # productionPassword: not-a-secure-password
+
   ## Defaults to a random 128-character alphanumeric string if not set
   ##
   # secretKeyBase:
+
+  env:
+    ## http://port.us.org/docs/debugging.html
+    ## The available log levels are: debug, info, warn, error, fatal and unknown
+    log_level: info
 
   ## config
   ##
@@ -53,11 +62,59 @@ portus:
       reply_to: "no-reply@example.com"
       smtp:
         enabled: false
-        address: "smtp.example.com"
+        address: smtp.example.com
         port: 587
-        domain: "example.com"
+        domain: example.com
+        username: username@example.com
+        password: not-a-password
     gravatar: true  # If enabled, then the profile picture will be picked from the Gravatar
     delete: true  # Allow admins and owners to delete images and tags
+
+    ## LDAP support. If enabled, then only users of the specified LDAP server will
+    ## be able to use Portus. Take a look at the documentation of LDAP support in our
+    ## online docs: http://port.us.org/features/2_LDAP-support.html.
+    ldap:
+      enabled: false
+      url:
+      port:
+
+      # Available options: "plain", "simple_tls" and "starttls". The default is
+      # "plain", the recommended is "starttls".
+      method: plain
+      # The base where users are located (e.g. "ou=users,dc=example,dc=com").
+      base:
+      # User filter (e.g. "mail=george*").
+      filter:
+      # The LDAP attribute where to search for username. The default is 'uid'.
+      uid:
+      # LDAP credentials used to search for a user.
+      authentication:
+        enabled: false
+        bind_dn:
+        password:
+
+      # Portus needs an email for each user, but there's no standard way to get
+      # that from LDAP servers. You can tell Portus how to get the email from users
+      # registered in the LDAP server with this configurable value. There are three
+      # possibilities:
+      #
+      #   - disabled: this is the default value. It means that Portus won't do a
+      #     thing when registering LDAP users (users will be redirected to their
+      #     profile page until they setup an email account).
+      #   - enabled where "attr" is empty: for this you need "ldap.base" to have
+      #     some value. In this case, the hostname will be guessed from the domain
+      #     component of the provided base string. For example, for the dn:
+      #     "ou=users,dc=example,dc=com", and a user name "user", the resulting
+      #     email is "user@example.com".
+      #   - enabled where "attr" is not empty: with this you specify the attribute
+      #     inside a LDIF record where the email is set.
+      #
+      # If something goes wrong when trying to guess the email, then it just falls
+      # back to the default behavior (empty email).
+      guess_email:
+        enabled: false
+        attr:
+
     first_user_admin: true # First user signing up will be admin
     signup: true  # If enabled, then users can signup with the signup form
     display_name: false  # Allow users to have different display names on the web site
@@ -67,6 +124,18 @@ portus:
       manage_team: true  # Allow users to create/modify teams if they are an owner of it
       create_namespace: true # Allow users to create namespaces
       manage_namespace: true  # Allow users to create/modify namespaces if they are an owner of it
+
+    oauth:
+      # Gitlab authentication support.
+      # Callback url: <host>/users/auth/gitlab/callback
+      gitlab:
+        enabled: false
+        applicationId:
+        secret:
+        group:
+        domain:
+        server:
+
     security:
       clair:
         server: "" # This is only guaranteed to work for v2.0.x releases of Clair
@@ -146,12 +215,17 @@ nginx:
   ## Service configuration.
   ##
   service:
-    ## Set to ClusterIP if using ingress, or NodePort if using minikube 
+    ## Set to ClusterIP if using ingress, or NodePort if using minikube
     ##
     type: "ClusterIP"
 
-    port: "80"
+    port:
     # nodePort:
+
+    ## Annotation to be added to the service
+    ##
+    annotations:
+    #   kubernetes.io/ingress.class: "nginx"
 
   ## in order to access the docker registry from outside of the cluster
   ## if ingress is enabled set host to the domain you are using
@@ -201,6 +275,7 @@ mariadb:
   ##
   persistence:
     enabled: false
+    # storageClass: "-"
     accessMode: "ReadWriteOnce"
     size: "8Gi"
 
