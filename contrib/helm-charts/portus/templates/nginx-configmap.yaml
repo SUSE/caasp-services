@@ -53,7 +53,7 @@ data:
       }
 
       server {
-        server_name {{ template "nginx.fullname" . }}
+        server_name {{ template "nginx.fullname" . }};
 
         {{- if .Values.portus.tls.enabled }}
         listen {{ .Values.nginx.service.port }} ssl http2;
