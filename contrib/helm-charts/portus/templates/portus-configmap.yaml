@@ -155,15 +155,15 @@ data:
       # Bitbucket authentication support. Need permission to read email.
       # Callback url: <host>/users/auth/bitbucket/callback
       bitbucket:
-        enabled: {{ .Values.portus.config.oauth.enabled }}
+        enabled: {{ .Values.portus.config.oauth.bitbucket.enabled }}
         # Application credentials.
-        key: {{ .Values.portus.config.oauth.key | quote }}
-        secret: {{ .Values.portus.config.oauth.secret | quote }}
+        key: {{ .Values.portus.config.oauth.bitbucket.key | quote }}
+        secret: {{ .Values.portus.config.oauth.bitbucket.secret | quote }}
         # If a domain (e.g. mycompany.com) is set, then only signups with email from this domain are allowed.
-        domain: {{ .Values.portus.config.oauth.domain | quote }}
+        domain: {{ .Values.portus.config.oauth.bitbucket.domain | quote }}
         options:
           # Only members of team can sign in/up with Bitbucket. Need permission to read team membership.
-          team: {{ .Values.portus.config.oauth.options.team | quote }}
+          team: {{ .Values.portus.config.oauth.bitbucket.options.team | quote }}
 
     # Set first_user_admin to true if you want that the first user that signs up
     # to be an admin.
