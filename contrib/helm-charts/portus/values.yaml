@@ -126,15 +126,52 @@ portus:
       manage_namespace: true  # Allow users to create/modify namespaces if they are an owner of it
 
     oauth:
+      # If enabled, users can authenticate with their Google Account.
+      # Callback url: <host>/users/auth/google_oauth2/callback
+      google_oauth2:
+        enabled: false
+        id:
+        secret:
+        domain:
+        options:
+          hd:
+
+      # OpenID authentication support. If enabled, then users can authenticate with OpenID/Connect
+      # Callback url: <host>/users/auth/open_id/callback
+      open_id:
+        enabled: false
+        identifier:
+        domain:
+
+      # Github authentication support.
+      # Callback url: <host>/users/auth/github/callback
+      github:
+        enabled: false
+        client_id:
+        client_secret:
+        organization:
+        team:
+        domain:
+
       # Gitlab authentication support.
       # Callback url: <host>/users/auth/gitlab/callback
       gitlab:
         enabled: false
-        applicationId:
+        application_id:
         secret:
         group:
         domain:
         server:
+
+      # Bitbucket authentication support. Need permission to read email.
+      # Callback url: <host>/users/auth/bitbucket/callback
+      bitbucket:
+        enabled: false
+        key:
+        secret:
+        domain:
+        options:
+          team:
 
     security:
       clair:
